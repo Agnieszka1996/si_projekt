@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="action_back_to_list">
+                <source>action_back_to_list</source>
+                <target>Back to the list</target>
+            </trans-unit>
+            <trans-unit id="action_view">
+                <source>action_view</source>
+                <target>View</target>
+            </trans-unit>
+            <trans-unit id="label_actions">
+                <source>label_actions</source>
+                <target>Actions</target>
+            </trans-unit>
+            <trans-unit id="label_description">
+                <source>label_description</source>
+                <target>Description</target>
+            </trans-unit>
+            <trans-unit id="label_id">
+                <source>label_id</source>
+                <target>Id</target>
+            </trans-unit>
+            <trans-unit id="label_name">
+                <source>label_name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="label_category">
+                <source>label_category</source>
+                <target>Category</target>
+            </trans-unit>
+            <trans-unit id="label_comment">
+                <source>label_comment</source>
+                <target>Comment</target>
+            </trans-unit>
+            <trans-unit id="label_content">
+                <source>label_content</source>
+                <target>Content</target>
+            </trans-unit>
+            <trans-unit id="label_tags">
+                <source>label_tags</source>
+                <target>Tags</target>
+            </trans-unit>
+            <trans-unit id="label_tasklist">
+                <source>label_tasklist</source>
+                <target>Tasklist</target>
+            </trans-unit>
+            <trans-unit id="label_tasklistalarm">
+                <source>label_tasklistalarm</source>
+                <target>Tasklist Alarm</target>
+            </trans-unit>
+            <trans-unit id="label_tasklistpriority">
+                <source>label_tasklistpriority</source>
+                <target>Tasklist Priority</target>
+            </trans-unit>
+            <trans-unit id="label_term">
+                <source>label_term</source>
+                <target>Term</target>
+            </trans-unit>
+            <trans-unit id="message_empty_list">
+                <source>message_empty_list</source>
+                <target>Empty list.</target>
+            </trans-unit>
+            <trans-unit id="message_not_found">
+                <source>message_not_found</source>
+                <target>Not found.</target>
+            </trans-unit>
+            <trans-unit id="title_category_list">
+                <source>title_category_list</source>
+                <target>Category list</target>
+            </trans-unit>
+            <trans-unit id="title_note_details">
+                <source>title_note_details</source>
+                <target>Note details</target>
+            </trans-unit>
+            <trans-unit id="title_note_list">
+                <source>title_note_list</source>
+                <target>Note list</target>
+            </trans-unit>
+            <trans-unit id="title_record_list">
+                <source>title_record_list</source>
+                <target>Record list</target>
+            </trans-unit>
+            <trans-unit id="title_record_view">
+                <source>title_record_view</source>
+                <target>Record view</target>
+            </trans-unit>
+            <trans-unit id="title_task_details">
+                <source>title_task_details</source>
+                <target>Task details</target>
+            </trans-unit>
+            <trans-unit id="title_task_list">
+                <source>title_task_list</source>
+                <target>Task list</target>
+            </trans-unit>
+            <trans-unit id="title_tasklist_details">
+                <source>title_tasklist_details</source>
+                <target>Tasklist details</target>
+            </trans-unit>
+            <trans-unit id="title_tasklist_list">
+                <source>title_tasklist_list</source>
+                <target>Tasklist list</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

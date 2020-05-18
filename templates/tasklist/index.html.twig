@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title_tasklist_list'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title_tasklist_list'|trans }}</h1>
+    {% if pagination is defined and pagination.items|length %}
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(pagination, 'label_id'|trans, 'tasklist.id') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_name'|trans, 'tasklist.name') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_term'|trans, 'tasklist.term') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_description'|trans, 'tasklist.description') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_comment'|trans, 'tasklist.comment') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_category'|trans, 'category.name') }}</th>
+                <th>{{ 'label_actions'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tasklist in pagination.items %}
+                <tr>
+                    <td>{{ tasklist.id }}</td>
+                    <td>{{ tasklist.name }}</td>
+                    <td>{{ tasklist.term|format_date('long') }}</td>
+                    <td>{{ tasklist.description }}</td>
+                    <td>{{ tasklist.comment }}</td>
+                    <td>{{ tasklist.category.name }}</td>
+                    <td>
+                        <a href="{{ url('tasklist_show', {id: tasklist.id}) }}" title="{{ 'action_view'|trans }}">
+                            {{ 'action_view'|trans }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
+    {% else %}
+        <p>
+            {{ 'message_empty_list'|trans }}
+        </p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title_tasklist_details'|trans({'%id%': tasklist.id|default('')}) }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title_tasklist_details'|trans({'%id%': tasklist.id|default('')}) }}</h1>
+    {% if tasklist is defined and tasklist|length %}
+        <dl class="dl-horizontal">
+            <dt>{{ 'label_id'|trans }}</dt>
+            <dd>{{ tasklist.id }}</dd>
+            <dt>{{ 'label_name'|trans }}</dt>
+            <dd>{{ tasklist.name }}</dd>
+            <dt>{{ 'label_term'|trans }}</dt>
+            <dd>{{ tasklist.term|format_date('long') }}</dd>
+            <dt>{{ 'label_description'|trans }}</dt>
+            <dd>{{ tasklist.description }}</dd>
+            <dt>{{ 'label_comment'|trans }}</dt>
+            <dd>{{ tasklist.comment }}</dd>
+            <dt>{{ 'label_category'|trans }}</dt>
+            <dd>{{  tasklist.category.name }}</dd>
+        </dl>
+        <p>
+            <a href="{{ url('tasklist_index') }}" title="{{ 'action_back_to_list'|trans }}">
+                {{ 'action_back_to_list'|trans }}
+            </a>
+        </p>
+    {% else %}
+        <p>
+            {{ 'message_item_not_found'|trans }}
+        </p>
+    {% endif %}
+{% endblock %}
