@@ -13,7 +13,7 @@
             <dt>{{ 'label_name'|trans }}</dt>
             <dd>{{ task.name }}</dd>
             <dt>{{ 'label_term'|trans }}</dt>
-            <dd>{{ task.term|format_date('long') }}</dd>
+            <dd>{{ task.term|date('Y-m-d') }}</dd>
             <dt>{{ 'label_description'|trans }}</dt>
             <dd>{{ task.description }}</dd>
             <dt>{{ 'label_comment'|trans }}</dt>

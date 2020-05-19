@@ -29,7 +29,7 @@
                 <tr>
                     <td>{{ tasklist.id }}</td>
                     <td>{{ tasklist.name }}</td>
-                    <td>{{ tasklist.term|format_date('long') }}</td>
+                    <td>{{ tasklist.term|date('Y-m-d') }}</td>
                     <td>{{ tasklist.description }}</td>
                     <td>{{ tasklist.comment }}</td>
                     <td>{{ tasklist.category.name }}</td>

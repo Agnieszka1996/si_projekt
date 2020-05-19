@@ -30,7 +30,7 @@
                 <tr>
                     <td>{{ task.id }}</td>
                     <td>{{ task.name }}</td>
-                    <td>{{ task.term|format_date('long') }}</td>
+                    <td>{{ task.term|date('Y-m-d') }}</td>
                     <td>{{ task.description }}</td>
                     <td>{{ task.comment }}</td>
                     <td>{{ task.category.name }}</td>

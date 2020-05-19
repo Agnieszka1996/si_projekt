@@ -13,7 +13,7 @@
             <dt>{{ 'label_name'|trans }}</dt>
             <dd>{{ tasklist.name }}</dd>
             <dt>{{ 'label_term'|trans }}</dt>
-            <dd>{{ tasklist.term|format_date('long') }}</dd>
+            <dd>{{ tasklist.term|date('Y-m-d') }}</dd>
             <dt>{{ 'label_description'|trans }}</dt>
             <dd>{{ tasklist.description }}</dd>
             <dt>{{ 'label_comment'|trans }}</dt>
