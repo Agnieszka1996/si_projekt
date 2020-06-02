@@ -65,4 +65,32 @@ class TasklistRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('tasklist');
     }
+
+    /**
+     * Save record.
+     *
+     * @param \App\Entity\Tasklist $tasklist Tasklist entity
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save(Tasklist $tasklist): void
+    {
+        $this->_em->persist($tasklist);
+        $this->_em->flush($tasklist);
+    }
+
+    /**
+     * Delete record.
+     *
+     * @param \App\Entity\Tasklist $tasklist Tasklist entity
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function delete(Tasklist $tasklist): void
+    {
+        $this->_em->remove($tasklist);
+        $this->_em->flush($tasklist);
+    }
 }

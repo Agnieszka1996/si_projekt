@@ -6,6 +6,13 @@
 
 {% block body %}
     <h1>{{ 'title_tasklist_list'|trans }}</h1>
+
+    <div class="form-group row float-sm-right">
+        <a href="{{ url('tasklist_create') }}" class="btn btn-primary">
+            {{ 'create_new'|trans }}
+        </a>
+    </div>
+
     {% if pagination is defined and pagination.items|length %}
 
         <div class="navigation text-center">
@@ -32,10 +39,19 @@
                     <td>{{ tasklist.term|date('Y-m-d') }}</td>
                     <td>{{ tasklist.description }}</td>
                     <td>{{ tasklist.comment }}</td>
-                    <td>{{ tasklist.category.name }}</td>
+                    <td>
+                        <a href="{{ url('category_show', {id: tasklist.category.id}) }}" title="{{ 'category_show'|trans }}">
+                            {{ tasklist.category.name }}
+                    </td>
                     <td>
                         <a href="{{ url('tasklist_show', {id: tasklist.id}) }}" title="{{ 'action_view'|trans }}">
                             {{ 'action_view'|trans }}
+                        </a>
+                        <a href="{{ url('tasklist_edit', {id: tasklist.id}) }}" title="{{ 'action_edit'|trans }}">
+                            {{ 'action_edit'|trans }}
+                        </a>
+                        <a href="{{ url('tasklist_delete', {id: tasklist.id}) }}" title="{{ 'action_delete'|trans }}">
+                            {{ 'action_delete'|trans }}
                         </a>
                     </td>
                 </tr>

@@ -30,4 +30,3 @@
 /.web-server-pid
 ###< symfony/web-server-bundle ###
 /public/playground/
-/public/css/

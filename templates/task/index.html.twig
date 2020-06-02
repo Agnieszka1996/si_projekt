@@ -6,6 +6,13 @@
 
 {% block body %}
     <h1>{{ 'title_task_list'|trans }}</h1>
+
+    <div class="form-group row float-sm-right">
+        <a href="{{ url('task_create') }}" class="btn btn-primary">
+            {{ 'create_new'|trans }}
+        </a>
+    </div>
+
     {% if pagination is defined and pagination.items|length %}
 
         <div class="navigation text-center">
@@ -30,14 +37,27 @@
                 <tr>
                     <td>{{ task.id }}</td>
                     <td>{{ task.name }}</td>
-                    <td>{{ task.term|date('Y-m-d') }}</td>
+                    <td>{{ task.term|format_date('long') }}</td>
                     <td>{{ task.description }}</td>
                     <td>{{ task.comment }}</td>
-                    <td>{{ task.category.name }}</td>
-                    <td>{{ task.tasklist.name }}</td>
+                    <td>
+                        <a href="{{ url('category_show', {id: task.category.id}) }}" title="{{ 'category_show'|trans }}">
+                        {{ task.category.name }}
+                    </td>
+                    <td>
+                        <a href="{{ url('tasklist_show', {id: task.tasklist.id}) }}" title="{{ 'tasklist_show'|trans }}">
+                            {{ task.tasklist.name }}
+                        </a>
+                    </td>
                     <td>
                         <a href="{{ url('task_show', {id: task.id}) }}" title="{{ 'action_view'|trans }}">
                             {{ 'action_view'|trans }}
+                        </a>
+                        <a href="{{ url('task_edit', {id: task.id}) }}" title="{{ 'action_edit'|trans }}">
+                            {{ 'action_edit'|trans }}
+                        </a>
+                        <a href="{{ url('task_delete', {id: task.id}) }}" title="{{ 'action_delete'|trans }}">
+                            {{ 'action_delete'|trans }}
                         </a>
                     </td>
                 </tr>

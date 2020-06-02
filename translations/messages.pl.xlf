@@ -6,9 +6,29 @@
                 <source>action_back_to_list</source>
                 <target>Powrót do listy</target>
             </trans-unit>
+            <trans-unit id="action_delete">
+                <source>action_delete</source>
+                <target>Usuń</target>
+            </trans-unit>
+            <trans-unit id="action_edit">
+                <source>action_edit</source>
+                <target>Edytuj</target>
+            </trans-unit>
+            <trans-unit id="action_save">
+                <source>action_save</source>
+                <target>Zapisz</target>
+            </trans-unit>
             <trans-unit id="action_view">
                 <source>action_view</source>
                 <target>Podgląd</target>
+            </trans-unit>
+            <trans-unit id="category_details">
+                <source>category_details</source>
+                <target>Szczegóły kategorii</target>
+            </trans-unit>
+            <trans-unit id="create_new">
+                <source>create_new</source>
+                <target>Utwórz</target>
             </trans-unit>
             <trans-unit id="label_actions">
                 <source>label_actions</source>
@@ -66,13 +86,37 @@
                 <source>message_not_found</source>
                 <target>Nie znaleziono.</target>
             </trans-unit>
+            <trans-unit id="title_category_create">
+                <source>title_category_create</source>
+                <target>Utwórz kategorię</target>
+            </trans-unit>
+            <trans-unit id="title_category_delete">
+                <source>title_category_delete</source>
+                <target>Usuń kategorię</target>
+            </trans-unit>
+            <trans-unit id="title_category_edit">
+                <source>title_category_edit</source>
+                <target>Edytuj kategorię</target>
+            </trans-unit>
             <trans-unit id="title_category_list">
                 <source>title_category_list</source>
                 <target>Lista kategorii</target>
             </trans-unit>
+            <trans-unit id="title_note_create">
+                <source>title_note_create</source>
+                <target>Utwórz notatkę</target>
+            </trans-unit>
+            <trans-unit id="title_note_delete">
+                <source>title_note_delete</source>
+                <target>Usuń notatkę</target>
+            </trans-unit>
             <trans-unit id="title_note_details">
                 <source>title_note_details</source>
                 <target>Szczegóły notatki</target>
+            </trans-unit>
+            <trans-unit id="title_note_edit">
+                <source>title_note_edit</source>
+                <target>Edytuj notatkę</target>
             </trans-unit>
             <trans-unit id="title_note_list">
                 <source>title_note_list</source>
@@ -86,17 +130,61 @@
                 <source>title_record_view</source>
                 <target>Szczegóły rekordu</target>
             </trans-unit>
+            <trans-unit id="title_tag_create">
+                <source>title_tag_create</source>
+                <target>Utwórz tag</target>
+            </trans-unit>
+            <trans-unit id="title_tag_delete">
+                <source>title_tag_delete</source>
+                <target>Usuń tag</target>
+            </trans-unit>
+            <trans-unit id="title_tag_details">
+                <source>title_tag_details</source>
+                <target>Szczegóły tagu</target>
+            </trans-unit>
+            <trans-unit id="title_tag_edit">
+                <source>title_tag_edit</source>
+                <target>Edytuj tag</target>
+            </trans-unit>
+            <trans-unit id="title_tag_list">
+                <source>title_tag_list</source>
+                <target>Lista tagów</target>
+            </trans-unit>
+            <trans-unit id="title_task_create">
+                <source>title_task_create</source>
+                <target>Utwórz zadanie</target>
+            </trans-unit>
+            <trans-unit id="title_task_delete">
+                <source>title_task_delete</source>
+                <target>Usuń zadanie</target>
+            </trans-unit>
             <trans-unit id="title_task_details">
                 <source>title_task_details</source>
                 <target>Szczegóły zadania</target>
+            </trans-unit>
+            <trans-unit id="title_task_edit">
+                <source>title_task_edit</source>
+                <target>Edytuj zadanie</target>
             </trans-unit>
             <trans-unit id="title_task_list">
                 <source>title_task_list</source>
                 <target>Zadania</target>
             </trans-unit>
+            <trans-unit id="title_tasklist_create">
+                <source>title_tasklist_create</source>
+                <target>Utwórz listę zadań</target>
+            </trans-unit>
+            <trans-unit id="title_tasklist_delete">
+                <source>title_tasklist_delete</source>
+                <target>Usuń listę zadań</target>
+            </trans-unit>
             <trans-unit id="title_tasklist_details">
                 <source>title_tasklist_details</source>
                 <target>Szczegóły listy</target>
+            </trans-unit>
+            <trans-unit id="title_tasklist_edit">
+                <source>title_tasklist_edit</source>
+                <target>Edytuj listę zadań</target>
             </trans-unit>
             <trans-unit id="title_tasklist_list">
                 <source>title_tasklist_list</source>

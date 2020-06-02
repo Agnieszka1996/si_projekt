@@ -65,4 +65,32 @@ class NoteRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('note');
     }
+
+    /**
+     * Save record.
+     *
+     * @param \App\Entity\Note $note Note entity
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save(Note $note): void
+    {
+        $this->_em->persist($note);
+        $this->_em->flush($note);
+    }
+
+    /**
+     * Delete record.
+     *
+     * @param \App\Entity\Note $note Note entity
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function delete(Note $note): void
+    {
+        $this->_em->remove($note);
+        $this->_em->flush($note);
+    }
 }

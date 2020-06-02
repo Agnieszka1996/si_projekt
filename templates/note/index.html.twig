@@ -6,6 +6,13 @@
 
 {% block body %}
     <h1>{{ 'title_note_list'|trans }}</h1>
+
+    <div class="form-group row float-sm-right">
+        <a href="{{ url('note_create') }}" class="btn btn-primary">
+            {{ 'create_new'|trans }}
+        </a>
+    </div>
+
     {% if pagination is defined and pagination.items|length %}
 
         <div class="navigation text-center">
@@ -28,10 +35,19 @@
                     <td>{{ note.id }}</td>
                     <td>{{ note.name }}</td>
                     <td>{{ note.content }}</td>
-                    <td>{{ note.category.name }}</td>
+                    <td>
+                        <a href="{{ url('category_show', {id: note.category.id}) }}" title="{{ 'category_show'|trans }}">
+                            {{ note.category.name }}
+                    </td>
                     <td>
                         <a href="{{ url('note_show', {id: note.id}) }}" title="{{ 'action_view'|trans }}">
                             {{ 'action_view'|trans }}
+                        </a>
+                        <a href="{{ url('note_edit', {id: note.id}) }}" title="{{ 'action_edit'|trans }}">
+                            {{ 'action_edit'|trans }}
+                        </a>
+                        <a href="{{ url('note_delete', {id: note.id}) }}" title="{{ 'action_delete'|trans }}">
+                            {{ 'action_delete'|trans }}
                         </a>
                     </td>
                 </tr>
