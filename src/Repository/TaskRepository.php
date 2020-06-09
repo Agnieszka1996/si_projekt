@@ -7,9 +7,11 @@ namespace App\Repository;
 
 use App\Entity\Task;
 use App\Entity\Tasklist;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class TaskRepository.
@@ -40,20 +42,6 @@ class TaskRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Task::class);
-    }
-
-    /**
-     * Query all records.
-     *
-     * @return \Doctrine\ORM\QueryBuilder Query builder
-     */
-    public function queryAll(): QueryBuilder
-    {
-        return $this->getOrCreateQueryBuilder()
-            ->select('task', 'category', 'tasklist')
-            ->innerJoin('task.category', 'category')
-            ->innerJoin('task.tasklist', 'tasklist')
-            ->orderBy('task.term', 'DESC');
     }
 
     /**
@@ -94,5 +82,37 @@ class TaskRepository extends ServiceEntityRepository
     {
         $this->_em->remove($task);
         $this->_em->flush($task);
+    }
+
+    /**
+     * Query tasks by author.
+     *
+     * @param \App\Entity\User $user User entity
+     *
+     * @return \Doctrine\ORM\QueryBuilder Query builder
+     */
+    public function queryByAuthor(User $user): QueryBuilder
+    {
+        $queryBuilder = $this->queryAll();
+
+        $queryBuilder->andWhere('task.author = :author')
+            ->setParameter('author', $user);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * Query all records.
+     *
+     * @return \Doctrine\ORM\QueryBuilder Query builder
+     */
+    public function queryAll(): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->select('task', 'category', 'tasklist', 'tags')
+            ->innerJoin('task.category', 'category')
+            ->innerJoin('task.tasklist', 'tasklist')
+            ->innerJoin('task.tags', 'tags')
+            ->orderBy('task.term', 'DESC');
     }
 }

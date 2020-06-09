@@ -10,6 +10,7 @@ use App\Form\TasklistType;
 use App\Repository\TasklistRepository;
 use App\Repository\TaskRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,8 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class TasklistController.
  *
  * @Route("/tasklist")
+ *
+ * @IsGranted("ROLE_USER")
  */
 class TasklistController extends AbstractController
 {
@@ -66,7 +69,6 @@ class TasklistController extends AbstractController
      */
     public function show(Tasklist $tasklist, TaskRepository $taskRepository): Response
     {
-        dump($taskRepository->findByTasklist($tasklist));
         return $this->render(
             'tasklist/show.html.twig',
             ['tasklist' => $tasklist]
