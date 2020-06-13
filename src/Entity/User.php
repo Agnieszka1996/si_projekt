@@ -7,7 +7,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -81,8 +83,15 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
+     *
+     * @SecurityAssert\UserPassword()
      */
     private $password;
+
+    /**
+     * @ORM\OneToOne(targetEntity=UserData::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $userData;
 
     /**
      * Getter for the Id.
@@ -189,5 +198,31 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * Getter for the UserData.
+     *
+     * @return UserData|null
+     */
+    public function getUserData(): ?UserData
+    {
+        return $this->userData;
+    }
+
+    /**
+     * Setter for the UserData.
+     *
+     * @param UserData $userData
+     * @return $this
+     */
+    public function setUserData(UserData $userData): void
+    {
+        $this->userData = $userData;
+
+        // set the owning side of the relation if necessary
+        if ($userData->getUser() !== $this) {
+            $userData->setUser($this);
+        }
     }
 }

@@ -7,7 +7,9 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
+use App\Repository\TaskRepository;
 use App\Service\CategoryService;
+use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -79,11 +81,29 @@ class CategoryController extends AbstractController
      *     requirements={"id": "[1-9]\d*"},
      * )
      */
-    public function show(Category $category): Response
+    public function show(Request $request, Category $category, TaskRepository $taskRepository, PaginatorInterface $paginator): Response
     {
+        if($this->isGranted('ROLE_ADMIN')){
+            $pagination = $paginator->paginate(
+                $taskRepository->findBy(['category'=>$category]),
+                $request->query->getInt('page', 1),
+                19
+            );
+        }
+        else{
+            $pagination = $paginator->paginate(
+                $taskRepository->queryByAuthorAndCategory($this->getUser(),$category),
+                $request->query->getInt('page', 1),
+                19
+            );
+        }
+
         return $this->render(
             'category/show.html.twig',
-            ['category' => $category]
+            [
+                'pagination' => $pagination,
+                'category' => $category
+            ]
         );
     }
 

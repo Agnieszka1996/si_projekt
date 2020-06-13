@@ -102,6 +102,24 @@ class TaskRepository extends ServiceEntityRepository
     }
 
     /**
+     * Query tasks by author and category.
+     *
+     * @param \App\Entity\User $user User entity
+     *
+     * @return \Doctrine\ORM\QueryBuilder Query builder
+     */
+    public function queryByAuthorAndCategory(User $user, Category $category): QueryBuilder
+    {
+        $queryBuilder = $this->queryAll();
+
+        $queryBuilder->andWhere('task.author = :author' AND 'task.category = :category')
+            ->setParameter('category', $category)
+            ->setParameter('author', $user);
+
+        return $queryBuilder;
+    }
+
+    /**
      * Query all records.
      *
      * @return \Doctrine\ORM\QueryBuilder Query builder

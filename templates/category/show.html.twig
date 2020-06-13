@@ -6,7 +6,13 @@
 
 {% block body %}
     <h1>{{ 'category_details'|trans({'%id%': category.id|default('')}) }}</h1>
-    {% if category is defined and category|length %}
+    {% if pagination is defined and pagination.items|length %}
+
+    <div class="navigation text-center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+    {% if pagination is defined and pagination|length %}
         <dl class="dl-horizontal">
             <dt>{{ 'label_id'|trans }}</dt>
             <dd>{{ category.id }}</dd>
@@ -14,6 +20,10 @@
             <dd>{{ category.name }}</dd>
             <dt>{{ 'label_content'|trans }}</dt>
             <dd>{{ category.description }}</dd>
+
+            {% for task in pagination.items %}
+                <td>{{ task.name }}</td>
+            {%  endfor %}
         </dl>
         <p>
             <a href="{{ url('category_index') }}" title="{{ 'action_back_to_list'|trans }}">
@@ -24,5 +34,6 @@
         <p>
             {{ 'message_item_not_found'|trans }}
         </p>
+    {% endif %}
     {% endif %}
 {% endblock %}

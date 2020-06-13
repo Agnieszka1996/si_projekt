@@ -120,11 +120,17 @@ class Task
     private $author;
 
     /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="task", orphanRemoval=true)
+     */
+    private $comments;
+
+    /**
      * Task constructor.
      */
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -299,6 +305,37 @@ class Task
     public function setAuthor(?User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setTask($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getTask() === $this) {
+                $comment->setTask(null);
+            }
+        }
 
         return $this;
     }

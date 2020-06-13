@@ -16,15 +16,29 @@
             <dd>{{ task.term|date('Y-m-d') }}</dd>
             <dt>{{ 'label_description'|trans }}</dt>
             <dd>{{ task.description }}</dd>
-            <dt>{{ 'label_comment'|trans }}</dt>
-            <dd>{{ task.comment }}</dd>
             <dt>{{ 'label_category'|trans }}</dt>
             <dd>{{  task.category.name }}</dd>
             <dt>{{ 'label_tasklist'|trans }}</dt>
             <dd>{{  task.tasklist.name }}</dd>
+            <dt>{{ 'label_comments'|trans }}</dt>
+            <dd>{%  for comment in task.comments %}
+                    {{ comment.content }}<br>
+                    {{ comment.date|date('d.m.Y') }}
+                {% endfor %}
+            </dd>
         </dl>
+        <div>
+           <h4>{{ 'add_comment'|trans }}</h4>
+
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and form is defined %}
         <p>
-            <a href="{{ url('task_index') }}" title="{{ 'action_back_to_list'|trans }}">
+            {{ form_start(form, { method: 'POST', action: url('task_show', {id: task.id}) }) }}
+            {{ form_start(form) }}
+            <input type ="submit" value="{{ 'post'|trans }}" class="btn btn-primary" />
+            {{ form_end(form) }}
+        </p>
+        <p>
+            <a href="{{ url('task_index') }}" title="{{ 'action_back_to_list'|trans }}" class="btn btn-primary">
                 {{ 'action_back_to_list'|trans }}
             </a>
         </p>
@@ -32,5 +46,7 @@
         <p>
             {{ 'message_item_not_found'|trans }}
         </p>
+    {% endif %}
+        </div>
     {% endif %}
 {% endblock %}

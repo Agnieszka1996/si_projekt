@@ -5,8 +5,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Task;
+use App\Form\CommentType;
 use App\Form\TaskType;
+use App\Repository\CommentRepository;
 use App\Repository\TaskRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -55,13 +58,17 @@ class TaskController extends AbstractController
     /**
      * Show action.
      *
+     * @param Request $request
      * @param \App\Entity\Task $task Task entity
      *
+     * @param CommentRepository $commentRepository
+     * @param TaskRepository $taskRepository
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
+     * @throws \Exception
      * @Route(
      *     "/{id}",
-     *     methods={"GET"},
+     *     methods={"GET", "POST"},
      *     name="task_show",
      *     requirements={"id": "[1-9]\d*"},
      * )
@@ -71,11 +78,29 @@ class TaskController extends AbstractController
      *     subject="task",
      * )
      */
-    public function show(Task $task): Response
+    public function show(Request $request, Task $task, TaskRepository $taskRepository, CommentRepository $commentRepository): Response
     {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setTask($task);
+            $comment->setDate(new \DateTime());
+
+            $commentRepository->save($comment);
+
+            $this->addFlash('success', 'message_created_successfully');
+
+            return $this->redirectToRoute('task_index');
+        }
+
         return $this->render(
             'task/show.html.twig',
-            ['task' => $task]
+            [
+                'task' => $task,
+                'form' => $form->createView()
+            ]
         );
     }
 

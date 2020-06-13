@@ -26,6 +26,10 @@
                 <source>action_save</source>
                 <target>Save</target>
             </trans-unit>
+            <trans-unit id="add_comment">
+                <source>add_comment</source>
+                <target>Add comment</target>
+            </trans-unit>
             <trans-unit id="action_view">
                 <source>action_view</source>
                 <target>View</target>
@@ -41,6 +45,10 @@
             <trans-unit id="label_actions">
                 <source>label_actions</source>
                 <target>Actions</target>
+            </trans-unit>
+            <trans-unit id="label_bio">
+                <source>label_bio</source>
+                <target>Bio</target>
             </trans-unit>
             <trans-unit id="label_description">
                 <source>label_description</source>
@@ -62,9 +70,25 @@
                 <source>label_comment</source>
                 <target>Comment</target>
             </trans-unit>
+            <trans-unit id="label_comments">
+                <source>label_comments</source>
+                <target>Comments</target>
+            </trans-unit>
             <trans-unit id="label_content">
                 <source>label_content</source>
                 <target>Content</target>
+            </trans-unit>
+            <trans-unit id="label_firstname">
+                <source>label_firstname</source>
+                <target>Firstname</target>
+            </trans-unit>
+            <trans-unit id="label_nick">
+                <source>label_nick</source>
+                <target>Nick</target>
+            </trans-unit>
+            <trans-unit id="label_surname">
+                <source>label_surname</source>
+                <target>Surname</target>
             </trans-unit>
             <trans-unit id="label_tags">
                 <source>label_tags</source>
@@ -93,6 +117,22 @@
             <trans-unit id="message_not_found">
                 <source>message_not_found</source>
                 <target>Not found.</target>
+            </trans-unit>
+            <trans-unit id="new_password">
+                <source>new_password</source>
+                <target>New password</target>
+            </trans-unit>
+            <trans-unit id="new_password_confirm">
+                <source>new_password_confirm</source>
+                <target>New password confirm</target>
+            </trans-unit>
+            <trans-unit id="old_password">
+                <source>old_password</source>
+                <target>Old password</target>
+            </trans-unit>
+            <trans-unit id="post">
+                <source>post</source>
+                <target>Post</target>
             </trans-unit>
             <trans-unit id="title_category_create">
                 <source>title_category_create</source>
@@ -197,6 +237,26 @@
             <trans-unit id="title_tasklist_list">
                 <source>title_tasklist_list</source>
                 <target>Tasklist list</target>
+            </trans-unit>
+            <trans-unit id="title_change_password">
+                <source>title_change_password</source>
+                <target>Change password</target>
+            </trans-unit>
+            <trans-unit id="title_user_details">
+                <source>title_user_details</source>
+                <target>User details</target>
+            </trans-unit>
+            <trans-unit id="title_user_edit">
+                <source>title_user_edit</source>
+                <target>User edit</target>
+            </trans-unit>
+            <trans-unit id="user_edit">
+                <source>user_edit</source>
+                <target>User edit</target>
+            </trans-unit>
+            <trans-unit id="user_panel">
+                <source>user_panel</source>
+                <target>User panel</target>
             </trans-unit>
         </body>
     </file>
