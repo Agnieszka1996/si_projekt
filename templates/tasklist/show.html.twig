@@ -6,7 +6,14 @@
 
 {% block body %}
     <h1>{{ 'title_tasklist_details'|trans({'%id%': tasklist.id|default('')}) }}</h1>
-    {% if tasklist is defined and tasklist|length %}
+
+    {% if pagination is defined and pagination.items|length %}
+
+    <div class="navigation text-center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+
+    {% if pagination is defined and pagination|length %}
         <dl class="dl-horizontal">
             <dt>{{ 'label_id'|trans }}</dt>
             <dd>{{ tasklist.id }}</dd>
@@ -20,6 +27,10 @@
             <dd>{{ tasklist.comment }}</dd>
             <dt>{{ 'label_category'|trans }}</dt>
             <dd>{{  tasklist.category.name }}</dd>
+            <dt>{{ 'label_tasks'|trans }}</dt>
+            <dd>{% for task in pagination.items %}
+                <td>{{ task.name }}</td>
+            {%  endfor %}</dd>
         </dl>
         <p>
             <a href="{{ url('tasklist_index') }}" title="{{ 'action_back_to_list'|trans }}">
@@ -30,5 +41,6 @@
         <p>
             {{ 'message_item_not_found'|trans }}
         </p>
+    {% endif %}
     {% endif %}
 {% endblock %}

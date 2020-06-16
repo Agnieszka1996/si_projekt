@@ -26,9 +26,9 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label_name'|trans, 'task.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_term'|trans, 'task.term') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_description'|trans, 'task.description') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'label_comment'|trans, 'task.comment') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_category'|trans, 'category.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_tasklist'|trans, 'tasklist.name') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_tags'|trans, 'task.tags') }}</th>
                 <th>{{ 'label_actions'|trans }}</th>
             </tr>
             </thead>
@@ -37,17 +37,28 @@
                 <tr>
                     <td>{{ task.id }}</td>
                     <td>{{ task.name }}</td>
-                    <td>{{ task.term|format_date('long') }}</td>
+                    <td>{{ task.term|date('d.m.Y') }}</td>
                     <td>{{ task.description }}</td>
-                    <td>{{ task.comment }}</td>
                     <td>
-                        <a href="{{ url('category_show', {id: task.category.id}) }}" title="{{ 'category_show'|trans }}">
-                        {{ task.category.name }}
+                        <a href="{{ url('task_index', {'filters' : {'category' : task.category.id}}) }}" title="{{ task.category.name }}">
+                            {{ task.category.name }}
+                        </a>
                     </td>
                     <td>
                         <a href="{{ url('tasklist_show', {id: task.tasklist.id}) }}" title="{{ 'tasklist_show'|trans }}">
                             {{ task.tasklist.name }}
                         </a>
+                    </td>
+                    <td>
+                    {% if task.tags is defined and task.tags|length %}
+                        {% for tag in task.tags %}
+                            <a href="{{ url('task_index', {'filters' : {'tag' : tag.id}}) }}" title="{{ tag.name }}">
+                                {{ tag.name }}
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        &nbsp;
+                    {% endif %}
                     </td>
                     <td>
                         {% if is_granted('VIEW', task) %}

@@ -41,25 +41,13 @@ class ChangePasswordType extends AbstractType
             'password',
             PasswordType::class,
             [
-                'label' => 'old_password',
-                'required' => true,
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(8, 16),
-                ]
+                'label' => 'new_password',
+                'required' => true
             ]
         );
 
-        $builder->add(
-            'new_password',
-            RepeatedType::class, array(
-            'mapped' => false,
-            'required' => true,
-            'type' => PasswordType::class,
-            'first_options' => array('label' => 'Password'),
-            'second_options' => array('label' => 'Repeat Password'),
-        ));
     }
+
 
     /**
      * Configures the options for this type.

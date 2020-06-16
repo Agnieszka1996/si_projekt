@@ -20,10 +20,16 @@
             <dd>{{  task.category.name }}</dd>
             <dt>{{ 'label_tasklist'|trans }}</dt>
             <dd>{{  task.tasklist.name }}</dd>
+            <dt>{{ 'label_tags'|trans }}</dt>
+            <dd>{%  for tag in task.tags %}
+                    <div class="btn btn-primary">{{ tag.name }}</div>
+                {% endfor %}
+            </dd>
             <dt>{{ 'label_comments'|trans }}</dt>
             <dd>{%  for comment in task.comments %}
+                    {{ comment.date|date('d.m.Y') }}<br>
                     {{ comment.content }}<br>
-                    {{ comment.date|date('d.m.Y') }}
+                    <br>
                 {% endfor %}
             </dd>
         </dl>

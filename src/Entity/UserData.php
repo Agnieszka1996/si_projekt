@@ -76,7 +76,6 @@ class UserData
      *
      * @ORM\OneToOne(
      *     targetEntity=User::class,
-     *     inversedBy="userData",
      *     cascade={"persist", "remove"}
      *     )
      *

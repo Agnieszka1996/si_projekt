@@ -26,6 +26,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label_name'|trans, 'note.name') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_content'|trans, 'note.content') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_category'|trans, 'category.name') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label_tags'|trans, 'note.tags') }}</th>
                 <th>{{ 'label_actions'|trans }}</th>
             </tr>
             </thead>
@@ -36,8 +37,20 @@
                     <td>{{ note.name }}</td>
                     <td>{{ note.content }}</td>
                     <td>
-                        <a href="{{ url('category_show', {id: note.category.id}) }}" title="{{ 'category_show'|trans }}">
+                        <a href="{{ url('note_index', {'filters' : {'category' : note.category.id}}) }}" title="{{ note.category.name }}">
                             {{ note.category.name }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if note.tags is defined and note.tags|length %}
+                            {% for tag in note.tags %}
+                                <a href="{{ url('note_index', {'filters' : {'tag' : tag.id}}) }}" title="{{ tag.name }}">
+                                    {{ tag.name }}
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
                     </td>
                     <td>
                         <a href="{{ url('note_show', {id: note.id}) }}" title="{{ 'action_view'|trans }}">

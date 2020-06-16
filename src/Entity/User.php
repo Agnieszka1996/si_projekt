@@ -83,15 +83,8 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
-     *
-     * @SecurityAssert\UserPassword()
      */
     private $password;
-
-    /**
-     * @ORM\OneToOne(targetEntity=UserData::class, mappedBy="user", cascade={"persist", "remove"})
-     */
-    private $userData;
 
     /**
      * Getter for the Id.
@@ -200,29 +193,4 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    /**
-     * Getter for the UserData.
-     *
-     * @return UserData|null
-     */
-    public function getUserData(): ?UserData
-    {
-        return $this->userData;
-    }
-
-    /**
-     * Setter for the UserData.
-     *
-     * @param UserData $userData
-     * @return $this
-     */
-    public function setUserData(UserData $userData): void
-    {
-        $this->userData = $userData;
-
-        // set the owning side of the relation if necessary
-        if ($userData->getUser() !== $this) {
-            $userData->setUser($this);
-        }
-    }
 }

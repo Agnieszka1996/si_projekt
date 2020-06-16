@@ -61,21 +61,16 @@ class UserController extends AbstractController
      */
     public function changePassword(Request $request, User $user, UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-        $this->passwordEncoder = $passwordEncoder;
         $form = $this->createForm(ChangePasswordType::class, $user, ['method' => 'PUT']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->setPassword(
-                $this->passwordEncoder->encodePassword(
-                    $user,
-                    $request
-                )
-            );
-
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                $user,
+                $form->get('password')->getData()));
             $userRepository->save($user);
-
-            $this->addFlash('success', 'message_updated_successfully');
+            $this->addFlash('succes', 'message_updated_successfully');
 
             return $this->redirectToRoute('task_index');
         }

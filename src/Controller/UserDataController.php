@@ -5,6 +5,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\UserData;
 use App\Form\UserDataType;
 use App\Repository\UserDataRepository;
@@ -25,6 +26,26 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserDataController extends AbstractController
 {
     /**
+     * Index action.
+     *
+     * @param \App\Entity\UserData $userdata UserData entity
+     *
+     * @return \Symfony\Component\HttpFoundation\Response HTTP response
+     *
+     * @Route(
+     *     "/",
+     *     name="user-data_index",
+     * )
+     */
+    public function index(): Response
+    {
+
+        return $this->render(
+            'userdata/index.html.twig'
+        );
+    }
+
+    /**
      * Show action.
      *
      * @param \App\Entity\UserData $userdata UserData entity
@@ -40,6 +61,7 @@ class UserDataController extends AbstractController
      */
     public function show(UserData $userdata): Response
     {
+        $userdata->setUser($this->getUser());
         return $this->render(
             'userdata/show.html.twig',
             ['userdata' => $userdata]

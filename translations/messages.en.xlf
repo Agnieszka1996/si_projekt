@@ -38,6 +38,14 @@
                 <source>category_details</source>
                 <target>Category details</target>
             </trans-unit>
+            <trans-unit id="change_password">
+                <source>change_password</source>
+                <target>Change password</target>
+            </trans-unit>
+            <trans-unit id="comment_created_successfully">
+                <source>comment_created_successfully</source>
+                <target>Comment created successfully.</target>
+            </trans-unit>
             <trans-unit id="create_new">
                 <source>create_new</source>
                 <target>Create new</target>
@@ -94,6 +102,10 @@
                 <source>label_tags</source>
                 <target>Tags</target>
             </trans-unit>
+            <trans-unit id="label_tasks">
+                <source>label_tasks</source>
+                <target>Tasks</target>
+            </trans-unit>
             <trans-unit id="label_tasklist">
                 <source>label_tasklist</source>
                 <target>Tasklist</target>
@@ -110,13 +122,17 @@
                 <source>label_term</source>
                 <target>Term</target>
             </trans-unit>
-            <trans-unit id="message_empty_list">
-                <source>message_empty_list</source>
+            <trans-unit id="message.empty_list">
+                <source>message.empty_list</source>
                 <target>Empty list.</target>
             </trans-unit>
             <trans-unit id="message_not_found">
                 <source>message_not_found</source>
                 <target>Not found.</target>
+            </trans-unit>
+            <trans-unit id="message_updated_successfully">
+                <source>message_updated_successfully</source>
+                <target>Updated successfully.</target>
             </trans-unit>
             <trans-unit id="new_password">
                 <source>new_password</source>

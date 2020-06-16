@@ -42,7 +42,7 @@ class TasklistController extends AbstractController
     public function index(Request $request, TasklistRepository $tasklistRepository, PaginatorInterface $paginator): Response
     {
         $pagination = $paginator->paginate(
-            $tasklistRepository->queryAll(),
+            $tasklistRepository->queryByAuthor($this->getUser()),
             $request->query->getInt('page', 1),
             TasklistRepository::PAGINATOR_ITEMS_PER_PAGE
         );
@@ -67,14 +67,23 @@ class TasklistController extends AbstractController
      *     requirements={"id": "[1-9]\d*"},
      * )
      */
-    public function show(Tasklist $tasklist, TaskRepository $taskRepository): Response
+    public function show(Request $request, Tasklist $tasklist, TaskRepository $taskRepository, PaginatorInterface $paginator): Response
     {
-        return $this->render(
+
+            $pagination = $paginator->paginate(
+                $taskRepository->findBy(['tasklist'=>$tasklist]),
+                $request->query->getInt('page', 1),
+                19
+            );
+
+            return $this->render(
             'tasklist/show.html.twig',
-            ['tasklist' => $tasklist]
+            [
+                'pagination' => $pagination,
+                'tasklist' => $tasklist
+            ]
         );
     }
-
     /**
      * Create action.
      *
@@ -99,6 +108,7 @@ class TasklistController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $tasklist->setAuthor($this->getUser());
             $tasklistRepository->save($tasklist);
 
             $this->addFlash('success', 'message_created_successfully');

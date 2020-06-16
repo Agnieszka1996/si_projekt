@@ -88,6 +88,14 @@ class TaskType extends AbstractType
                 'attr' => ['max_length' => 255],
             ]
         );
+        
+        $builder->add(
+            'tasklist',
+            EntityType::class,
+            array(
+                'class' => 'App\Entity\Tasklist',
+                'choice_label' => 'name'
+            ));
 
         $builder->add(
             'category',

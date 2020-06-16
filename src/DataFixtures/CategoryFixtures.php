@@ -30,4 +30,15 @@ class CategoryFixtures extends AbstractBaseFixtures
 
         $manager->flush();
     }
+
+    /**
+     * This method must return an array of fixtures classes
+     * on which the implementing class depends on.
+     *
+     * @return array Array of dependencies
+     */
+    public function getDependencies(): array
+    {
+        return [UserFixtures::class];
+    }
 }

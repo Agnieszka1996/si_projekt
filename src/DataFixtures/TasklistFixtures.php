@@ -31,6 +31,16 @@ class TasklistFixtures extends AbstractBaseFixtures implements DependentFixtureI
             //$tasklist->setTasklistAlarm($this->getRandomReference('tasklistalarms'));
             //$tasklist->setTasklistPriority($this->getRandomReference('tasklistpriorities'));
 
+            $tags = $this->getRandomReferences(
+                'tags',
+                $this->faker->numberBetween(0, 5)
+            );
+
+            foreach ($tags as $tag) {
+                $tasklist->addTag($tag);
+            }
+
+            $tasklist->setAuthor($this->getRandomReference('users'));
             return $tasklist;
         });
 
@@ -45,6 +55,6 @@ class TasklistFixtures extends AbstractBaseFixtures implements DependentFixtureI
      */
     public function getDependencies(): array
     {
-        return [CategoryFixtures::class];
+        return [UserFixtures::class, CategoryFixtures::class];
     }
 }

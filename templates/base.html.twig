@@ -53,9 +53,12 @@
         </div>
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <div>
-                <a href="{{ url('task_index') }}" class="btn btn-light">
-                    {{ 'user_panel'|trans }}</a>
+                <p>
+                  Hello,
+                <a href="{{ url('user-data_index') }}">
+                    {{ app.user.email }}</a>
                 </a>
+                </p>
             </div>
             <div>
                 <a href="{{ url('app_logout') }}" class="btn btn-light">
