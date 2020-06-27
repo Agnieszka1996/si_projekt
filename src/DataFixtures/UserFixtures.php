@@ -6,13 +6,14 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class UserFixtures.
  */
-class UserFixtures extends AbstractBaseFixtures
+class UserFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
 {
     /**
      * Password encoder.
@@ -42,6 +43,7 @@ class UserFixtures extends AbstractBaseFixtures
             $user = new User();
             $user->setEmail(sprintf('user%d@example.com', $i));
             $user->setRoles([User::ROLE_USER]);
+            $user->setUserData($this->getReference('usersData_'.$i));
             $user->setPassword(
                 $this->passwordEncoder->encodePassword(
                     $user,
@@ -55,6 +57,7 @@ class UserFixtures extends AbstractBaseFixtures
         $this->createMany(3, 'admins', function ($i) {
             $user = new User();
             $user->setEmail(sprintf('admin%d@example.com', $i));
+            $user->setUserData($this->getReference('usersDataAdmin_'.$i));
             $user->setRoles([User::ROLE_USER, User::ROLE_ADMIN]);
             $user->setPassword(
                 $this->passwordEncoder->encodePassword(
@@ -67,5 +70,16 @@ class UserFixtures extends AbstractBaseFixtures
         });
 
         $manager->flush();
+    }
+
+    /**
+     * This method must return an array of fixtures classes
+     * on which the implementing class depends on.
+     *
+     * @return array Array of dependencies
+     */
+    public function getDependencies(): array
+    {
+        return [UserDataFixtures::class];
     }
 }

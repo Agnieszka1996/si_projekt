@@ -1,13 +1,16 @@
 <?php
+/**
+ * Registration controller.
+ */
 
 namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserData;
 use App\Form\RegistrationFormType;
-use App\Repository\UserDataRepository;
-use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
+use App\Service\UserDataService;
+use App\Service\UserService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,25 +21,45 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 
 /**
- * Class RegistrationController
- * @package App\Controller
+ * Class RegistrationController.
  */
 class RegistrationController extends AbstractController
 {
     /**
-     * @Route("/register", name="app_register")
-     * @param Request $request
-     * @param UserRepository $userRepository
+     * User service.
      *
-     * @param UserDataRepository $userDataRepository
-     * @param UserPasswordEncoderInterface $passwordEncoder
-     * @param GuardAuthenticatorHandler $guardHandler
-     * @param LoginFormAuthenticator $authenticator
-     * @return Response
+     * @var \App\Service\UserService
+     */
+    private $userService;
+
+    /**
+     * UserData service.
+     *
+     * @var \App\Service\UserDataService
+     */
+    private $userDataService;
+
+    /**
+     * RegistrationController constructor.
+     *
+     * @param \App\Service\UserService     $userService     User service
+     * @param \App\Service\UserDataService $userDataService UserData service
+     */
+    public function __construct(UserService $userService, UserDataService $userDataService)
+    {
+        $this->userService = $userService;
+        $this->userDataService = $userDataService;
+    }
+
+    /**
+     * Register.
+     *
+     * @Route("/register", name="app_register")
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function register(Request $request, UserRepository $userRepository, UserDataRepository $userDataRepository, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator): Response
     {
         $user = new User();
         $userdata = new UserData();
@@ -52,16 +75,16 @@ class RegistrationController extends AbstractController
                 )
             );
             $user->setRoles(['ROLE_USER']);
-            $userdata->setUser($user);
-            $userRepository->save($user);
-            $userDataRepository->save($userdata);
+            $user->setUserData($userdata);
+            $this->userService->save($user);
+            $this->userDataService->save($userdata);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->persist($userdata);
             $entityManager->flush();
 
-            $this->addFlash('success', 'message.registered_successfully');
+            $this->addFlash('success', 'message_registered_successfully');
             // do anything else you need here, like send an email
 
             return $guardHandler->authenticateUserAndHandleSuccess(

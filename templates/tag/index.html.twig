@@ -5,13 +5,13 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ 'title_tag_list'|trans }}</h1>
-
-    <div class="form-group row float-sm-right">
-        <a href="{{ url('tag_create') }}" class="btn btn-primary">
-            {{ 'create_new'|trans }}
-        </a>
-    </div>
+    <h1>{{ 'title_tag_list'|trans }}
+        <div class="form-group row float-sm-right">
+            <a href="{{ url('tag_create') }}" class="btn btn-info">
+                {{ 'create_new'|trans }}
+            </a>
+        </div>
+    </h1>
 
     {% if pagination is defined and pagination.items|length %}
 

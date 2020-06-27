@@ -7,11 +7,10 @@ namespace App\Controller;
 
 use App\Entity\Note;
 use App\Form\NoteType;
-use App\Repository\NoteRepository;
 use App\Service\NoteService;
-use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,8 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class NoteController.
  *
  * @Route("/note")
- *
- * @IsGranted("ROLE_USER")
  */
 class NoteController extends AbstractController
 {
@@ -41,10 +38,11 @@ class NoteController extends AbstractController
     {
         $this->noteService = $noteService;
     }
+
     /**
      * Index action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request        HTTP request
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -80,9 +78,20 @@ class NoteController extends AbstractController
      *     name="note_show",
      *     requirements={"id": "[1-9]\d*"},
      * )
+     *
+     * @Security(
+     *     "is_granted('ROLE_ADMIN') or is_granted('VIEW', note)"
+     * )
      */
     public function show(Note $note): Response
     {
+        /*if ($note->getAuthor() !== $this->getUser()) {
+            $this->addFlash('warning', 'message_item_not_found');
+
+            return $this->redirectToRoute('note_index');
+        }
+        */
+
         return $this->render(
             'note/show.html.twig',
             ['note' => $note]
@@ -92,7 +101,7 @@ class NoteController extends AbstractController
     /**
      * Create action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request            HTTP request
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -129,8 +138,8 @@ class NoteController extends AbstractController
     /**
      * Edit action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request            HTTP request
-     * @param \App\Entity\Note                          $note               Note entity
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
+     * @param \App\Entity\Note                          $note    Note entity
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -143,14 +152,24 @@ class NoteController extends AbstractController
      *     requirements={"id": "[1-9]\d*"},
      *     name="note_edit",
      * )
+     *
+     * @Security(
+     *     "is_granted('ROLE_ADMIN') or is_granted('EDIT', note)"
+     * )
      */
     public function edit(Request $request, Note $note): Response
     {
+        /*if ($note->getAuthor() !== $this->getUser()) {
+            $this->addFlash('warning', 'message_item_not_found');
+
+            return $this->redirectToRoute('note_index');
+        }
+        */
+
         $form = $this->createForm(NoteType::class, $note, ['method' => 'PUT']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //$task->setUpdatedAt(new \DateTime());
             $this->noteService->save($note);
 
             $this->addFlash('success', 'message_updated_successfully');
@@ -170,8 +189,8 @@ class NoteController extends AbstractController
     /**
      * Delete action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request            HTTP request
-     * @param \App\Entity\Note                          $note               Note entity
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
+     * @param \App\Entity\Note                          $note    Note entity
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -184,10 +203,21 @@ class NoteController extends AbstractController
      *     requirements={"id": "[1-9]\d*"},
      *     name="note_delete",
      * )
+     *
+     * @Security(
+     *     "is_granted('ROLE_ADMIN') or is_granted('DELETE', note)"
+     * )
      */
     public function delete(Request $request, Note $note): Response
     {
-        $form = $this->createForm(NoteType::class, $note, ['method' => 'DELETE']);
+        /*if ($note->getAuthor() !== $this->getUser()) {
+            $this->addFlash('warning', 'message_item_not_found');
+
+            return $this->redirectToRoute('note_index');
+        }
+        */
+
+        $form = $this->createForm(FormType::class, $note, ['method' => 'DELETE']);
         $form->handleRequest($request);
 
         if ($request->isMethod('DELETE') && !$form->isSubmitted()) {
@@ -196,7 +226,7 @@ class NoteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->noteService->delete($note);
-            $this->addFlash('success', 'message.deleted_successfully',);
+            $this->addFlash('success', 'message_note_deleted_successfully');
 
             return $this->redirectToRoute('note_index');
         }

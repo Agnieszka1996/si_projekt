@@ -5,11 +5,9 @@
 
 namespace App\Entity;
 
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -58,7 +56,10 @@ class Tag
      *
      * @var \Doctrine\Common\Collections\ArrayCollection|\App\Entity\Task[] Tasks
      *
-     * @ORM\ManyToMany(targetEntity="App\Entity\Task", mappedBy="tags")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Entity\Task",
+     *     mappedBy="tags"
+     * )
      *
      * @Assert\Type(type="Doctrine\Common\Collections\ArrayCollection")
      */
@@ -69,22 +70,14 @@ class Tag
      *
      * @var \Doctrine\Common\Collections\ArrayCollection|\App\Entity\Note[] Notes
      *
-     * @ORM\ManyToMany(targetEntity="App\Entity\Note", mappedBy="tags")
+     * @ORM\ManyToMany(
+     *     targetEntity="App\Entity\Note",
+     *     mappedBy="tags"
+     * )
      *
      * @Assert\Type(type="Doctrine\Common\Collections\ArrayCollection")
      */
     private $notes;
-
-    /**
-     * Taskslists.
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection|\App\Entity\Tasklist[] Tasklists
-     *
-     * @ORM\ManyToMany(targetEntity="App\Entity\Tasklist", mappedBy="tags")
-     *
-     * @Assert\Type(type="Doctrine\Common\Collections\ArrayCollection")
-     */
-    private $tasklists;
 
     /**
      * Tag constructor.
@@ -93,7 +86,6 @@ class Tag
     {
         $this->tasks = new ArrayCollection();
         $this->notes = new ArrayCollection();
-        $this->tasklists = new ArrayCollection();
     }
 
     /**
@@ -196,33 +188,5 @@ class Tag
             $this->notes->removeElement($note);
             $note->removeTag($this);
         }
-    }
-
-    /**
-     * @return Collection|Tasklist[]
-     */
-    public function getTasklists(): Collection
-    {
-        return $this->tasklists;
-    }
-
-    public function addTasklist(Tasklist $tasklist): self
-    {
-        if (!$this->tasklists->contains($tasklist)) {
-            $this->tasklists[] = $tasklist;
-            $tasklist->addTag($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTasklist(Tasklist $tasklist): self
-    {
-        if ($this->tasklists->contains($tasklist)) {
-            $this->tasklists->removeElement($tasklist);
-            $tasklist->removeTag($this);
-        }
-
-        return $this;
     }
 }

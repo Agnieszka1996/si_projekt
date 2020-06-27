@@ -9,12 +9,11 @@ use App\Entity\Comment;
 use App\Entity\Task;
 use App\Form\CommentType;
 use App\Form\TaskType;
-use App\Repository\CommentRepository;
-use App\Repository\TaskRepository;
+use App\Service\CommentService;
 use App\Service\TaskService;
-use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,8 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class TaskController.
  *
  * @Route("/task")
- *
- * @IsGranted("ROLE_USER")
  */
 class TaskController extends AbstractController
 {
@@ -36,19 +33,29 @@ class TaskController extends AbstractController
     private $taskService;
 
     /**
+     * Comment service.
+     *
+     * @var \App\Service\CommentService
+     */
+    private $commentService;
+
+    /**
      * TaskController constructor.
      *
-     * @param \App\Service\TaskService $taskService Task service
+     * @param \App\Service\TaskService    $taskService    Task service
+     * @param \App\Service\CommentService $commentService Comment service
      */
-    public function __construct(TaskService $taskService)
+    public function __construct(TaskService $taskService, CommentService $commentService)
     {
         $this->taskService = $taskService;
+        $this->commentService = $commentService;
     }
+
     /**
      * Index action.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
-
+     *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
      * @Route(
@@ -73,14 +80,14 @@ class TaskController extends AbstractController
     /**
      * Show action.
      *
-     * @param Request $request
-     * @param \App\Entity\Task $task Task entity
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
+     * @param \App\Entity\Task                          $task    Task entity
      *
-     * @param CommentRepository $commentRepository
-     * @param TaskRepository $taskRepository
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
-     * @throws \Exception
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
      * @Route(
      *     "/{id}",
      *     methods={"GET", "POST"},
@@ -88,27 +95,31 @@ class TaskController extends AbstractController
      *     requirements={"id": "[1-9]\d*"},
      * )
      *
-     * @IsGranted(
-     *     "VIEW",
-     *     subject="task",
+     * @Security(
+     *     "is_granted('ROLE_ADMIN') or is_granted('VIEW', task)"
      * )
      */
-    public function show(Request $request, Task $task, CommentRepository $commentRepository): Response
+    public function show(Request $request, Task $task): Response
     {
+        /*if ($task->getAuthor() !== $this->getUser()) {
+            $this->addFlash('warning', 'message_item_not_found');
+
+            return $this->redirectToRoute('task_index');
+        }*/
+
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setTask($task);
-            $comment->setDate(new \DateTime());
 
-            $commentRepository->save($comment);
+            $this->commentService->save($comment);
 
             $this->addFlash('success', 'comment_created_successfully');
 
-
             $id = $task->getId();
+
             return $this->redirectToRoute('task_show', ['id' => $id]);
         }
 
@@ -116,7 +127,7 @@ class TaskController extends AbstractController
             'task/show.html.twig',
             [
                 'task' => $task,
-                'form' => $form->createView()
+                'form' => $form->createView(),
             ]
         );
     }
@@ -161,8 +172,8 @@ class TaskController extends AbstractController
     /**
      * Edit action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request            HTTP request
-     * @param \App\Entity\Task                          $task               Task entity
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
+     * @param \App\Entity\Task                          $task    Task entity
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -176,18 +187,22 @@ class TaskController extends AbstractController
      *     name="task_edit",
      * )
      *
-     * @IsGranted(
-     *     "EDIT",
-     *     subject="task",
+     * @Security(
+     *     "is_granted('ROLE_ADMIN') or is_granted('EDIT', task)"
      * )
      */
     public function edit(Request $request, Task $task): Response
     {
+        /*if ($task->getAuthor() !== $this->getUser()) {
+            $this->addFlash('warning', 'message_item_not_found');
+
+            return $this->redirectToRoute('task_index');
+        }
+*/
         $form = $this->createForm(TaskType::class, $task, ['method' => 'PUT']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //$task->setUpdatedAt(new \DateTime());
             $this->taskService->save($task);
 
             $this->addFlash('success', 'message_updated_successfully');
@@ -207,8 +222,8 @@ class TaskController extends AbstractController
     /**
      * Delete action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request            HTTP request
-     * @param \App\Entity\Task                          $task               Task entity
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
+     * @param \App\Entity\Task                          $task    Task entity
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -222,15 +237,20 @@ class TaskController extends AbstractController
      *     name="task_delete",
      * )
      *
-     * @IsGranted(
-     *     "DELETE",
-     *     subject="task",
+     * @Security(
+     *     "is_granted('ROLE_ADMIN') or is_granted('DELETE', task)"
      * )
-     *
      */
     public function delete(Request $request, Task $task): Response
     {
-        $form = $this->createForm(TaskType::class, $task, ['method' => 'DELETE']);
+        /*if ($task->getAuthor() !== $this->getUser()) {
+            $this->addFlash('warning', 'message_item_not_found');
+
+            return $this->redirectToRoute('task_index');
+        }
+        */
+
+        $form = $this->createForm(FormType::class, $task, ['method' => 'DELETE']);
         $form->handleRequest($request);
 
         if ($request->isMethod('DELETE') && !$form->isSubmitted()) {
@@ -239,7 +259,7 @@ class TaskController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->taskService->delete($task);
-            $this->addFlash('success', 'message.deleted_successfully');
+            $this->addFlash('success', 'message_deleted_successfully');
 
             return $this->redirectToRoute('task_index');
         }

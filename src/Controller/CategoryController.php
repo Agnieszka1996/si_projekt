@@ -7,9 +7,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
-use App\Repository\TaskRepository;
 use App\Service\CategoryService;
-use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -21,8 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class CategoryController.
  *
  * @Route("/category")
- *
- * @IsGranted("ROLE_ADMIN")
  */
 class CategoryController extends AbstractController
 {
@@ -80,30 +76,14 @@ class CategoryController extends AbstractController
      *     name="category_show",
      *     requirements={"id": "[1-9]\d*"},
      * )
+     *
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function show(Request $request, Category $category, TaskRepository $taskRepository, PaginatorInterface $paginator): Response
+    public function show(Category $category): Response
     {
-        if($this->isGranted('ROLE_ADMIN')){
-            $pagination = $paginator->paginate(
-                $taskRepository->findBy(['category'=>$category]),
-                $request->query->getInt('page', 1),
-                19
-            );
-        }
-        else{
-            $pagination = $paginator->paginate(
-                $taskRepository->queryByAuthorAndCategory($this->getUser(),$category),
-                $request->query->getInt('page', 1),
-                19
-            );
-        }
-
         return $this->render(
             'category/show.html.twig',
-            [
-                'pagination' => $pagination,
-                'category' => $category
-            ]
+            ['category' => $category]
         );
     }
 
@@ -122,6 +102,8 @@ class CategoryController extends AbstractController
      *     methods={"GET", "POST"},
      *     name="category_create",
      * )
+     *
+     * @IsGranted("ROLE_ADMIN")
      */
     public function create(Request $request): Response
     {
@@ -159,6 +141,8 @@ class CategoryController extends AbstractController
      *     requirements={"id": "[1-9]\d*"},
      *     name="category_edit",
      * )
+     *
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, Category $category): Response
     {
@@ -198,11 +182,13 @@ class CategoryController extends AbstractController
      *     requirements={"id": "[1-9]\d*"},
      *     name="category_delete",
      * )
+     *
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Category $category): Response
     {
-        if ($category->getTasks()->count()) {
-            $this->addFlash('warning', 'message_category_contains_tasks');
+        if ($category->getTasks()->count() or $category->getNotes()->count()) {
+            $this->addFlash('warning', 'message_category_contains_resources');
 
             return $this->redirectToRoute('category_index');
         }

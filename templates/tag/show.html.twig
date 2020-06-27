@@ -5,16 +5,34 @@
 {% endblock %}
 
 {% block body %}
+
     <h1>{{ 'title_tag_details'|trans({'%id%': tag.id|default('')}) }}</h1>
+
     {% if tag is defined and tag|length %}
         <dl class="dl-horizontal">
             <dt>{{ 'label_id'|trans }}</dt>
             <dd>{{ tag.id }}</dd>
             <dt>{{ 'label_name'|trans }}</dt>
             <dd>{{ tag.name }}</dd>
+            <dt>{{ 'label_tasks'|trans }}</dt>
+            <dd>
+                {% for task in tag.tasks %}
+                    <a href="{{ url('task_show', {id: task.id}) }}" title="{{ 'task_show'|trans }}">
+                        {{ task.name }}
+                    </a>|
+                {%  endfor %}
+            </dd>
+            <dt>{{ 'label_notes'|trans }}</dt>
+            <dd>
+                {% for note in tag.notes %}
+                    <a href="{{ url('note_show', {id: note.id}) }}" title="{{ 'note_show'|trans }}">
+                        {{ note.name }}
+                    </a>|
+                {%  endfor %}
+            </dd>
         </dl>
         <p>
-            <a href="{{ url('tag_index') }}" title="{{ 'action_back_to_list'|trans }}">
+            <a href="{{ url('tag_index') }}" title="{{ 'action_back_to_list'|trans }}" class="btn btn-info">
                 {{ 'action_back_to_list'|trans }}
             </a>
         </p>

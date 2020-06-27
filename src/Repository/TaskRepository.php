@@ -8,12 +8,10 @@ namespace App\Repository;
 use App\Entity\Category;
 use App\Entity\Tag;
 use App\Entity\Task;
-use App\Entity\Tasklist;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class TaskRepository.
@@ -104,42 +102,6 @@ class TaskRepository extends ServiceEntityRepository
     }
 
     /**
-     * Query tasks by author and category.
-     *
-     * @param \App\Entity\User $user User entity
-     *
-     * @return \Doctrine\ORM\QueryBuilder Query builder
-     */
-    public function queryByAuthorAndCategory(User $user, Category $category): QueryBuilder
-    {
-        $queryBuilder = $this->queryAll();
-
-        $queryBuilder->andWhere('task.author = :author' AND 'task.category = :category')
-            ->setParameter('category', $category)
-            ->setParameter('author', $user);
-
-        return $queryBuilder;
-    }
-
-    /**
-     * Query tasks by author and tasklist.
-     *
-     * @param \App\Entity\User $user User entity
-     *
-     * @return \Doctrine\ORM\QueryBuilder Query builder
-     */
-    public function queryByAuthorAndTasklist(User $user, Tasklist $tasklist): QueryBuilder
-    {
-        $queryBuilder = $this->queryAll();
-
-        $queryBuilder->andWhere('task.author = :author' AND 'task.tasklist = :tasklist')
-            ->setParameter('tasklist', $tasklist)
-            ->setParameter('author', $user);
-
-        return $queryBuilder;
-    }
-
-    /**
      * Query all records.
      *
      * @param array $filters Filters array
@@ -152,9 +114,15 @@ class TaskRepository extends ServiceEntityRepository
             ->select(
                 'partial task.{id, term, name, description}',
                 'partial category.{id, name}',
-                'partial tags.{id, name}'
+                'partial tags.{id, name}',
+                'partial author.{id, email}',
+                'partial alarm.{id}',
+                'partial priority.{id}',
             )
             ->join('task.category', 'category')
+            ->join('task.author', 'author')
+            ->join('task.alarm', 'alarm')
+            ->join('task.priority', 'priority')
             ->leftJoin('task.tags', 'tags')
             ->orderBy('task.term', 'DESC');
         $queryBuilder = $this->applyFiltersToList($queryBuilder, $filters);

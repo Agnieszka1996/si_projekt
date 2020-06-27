@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\UserDataRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class UserData.
  *
- * @ORM\Entity(repositoryClass=UserDataRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\UserDataRepository")
  * @ORM\Table(name="users_data")
  */
 class UserData
@@ -29,7 +29,13 @@ class UserData
      *     type="string",
      *     length=45,
      *     nullable=true
-     *     )
+     * )
+     *
+     * @Assert\Type(type="string")
+     * @Assert\Length(
+     *     min="3",
+     *     max="45",
+     * )
      */
     private $nick;
 
@@ -42,7 +48,13 @@ class UserData
      *     type="string",
      *     length=45,
      *     nullable=true
-     *     )
+     * )
+     *
+     * @Assert\Type(type="string")
+     * @Assert\Length(
+     *     min="3",
+     *     max="45",
+     * )
      */
     private $firstname;
 
@@ -55,33 +67,34 @@ class UserData
      *     type="string",
      *     length=45,
      *     nullable=true
-     *     )
+     * )
+     *
+     * @Assert\Type(type="string")
+     * @Assert\Length(
+     *     min="3",
+     *     max="45",
+     * )
      */
     private $surname;
 
     /**
      * Bio.
+     *
      * @var string
      *
      * @ORM\Column(
      *     type="string",
      *     length=255,
      *     nullable=true
-     *     )
+     * )
+     *
+     * @Assert\Type(type="string")
+     * @Assert\Length(
+     *     min="3",
+     *     max="255",
+     * )
      */
     private $bio;
-
-    /**
-     * User.
-     *
-     * @ORM\OneToOne(
-     *     targetEntity=User::class,
-     *     cascade={"persist", "remove"}
-     *     )
-     *
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
 
     /**
      * Getter for the Id.
@@ -94,7 +107,7 @@ class UserData
     }
 
     /**
-     * Getter for the Nick.
+     * Getter for nick.
      *
      * @return string|null Nick
      */
@@ -104,7 +117,7 @@ class UserData
     }
 
     /**
-     * Setter for the Nick.
+     * Setter for nick.
      *
      * @param string $nick Nick
      */
@@ -114,7 +127,7 @@ class UserData
     }
 
     /**
-     * Getter for the Firstname.
+     * Getter for firstname.
      *
      * @return string|null Firstname
      */
@@ -124,7 +137,7 @@ class UserData
     }
 
     /**
-     * Setter for the Firstname.
+     * Setter for firstname.
      *
      * @param string $firstname Firstname
      */
@@ -134,7 +147,7 @@ class UserData
     }
 
     /**
-     * Getter for the Surname.
+     * Getter for surname.
      *
      * @return string|null Surname
      */
@@ -144,7 +157,7 @@ class UserData
     }
 
     /**
-     * Setter for the Surname.
+     * Setter for surname.
      *
      * @param string $surname Surname
      */
@@ -154,7 +167,7 @@ class UserData
     }
 
     /**
-     * Getter for the Bio.
+     * Getter for bio.
      *
      * @return string|null Bio
      */
@@ -164,33 +177,12 @@ class UserData
     }
 
     /**
-     * Setter for the Bio.
+     * Setter for bio.
      *
      * @param string $bio Bio
      */
     public function setBio(?string $bio): void
     {
         $this->bio = $bio;
-    }
-
-    /**
-     * Getter for the user.
-     *
-     * @return User|null
-     */
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    /**
-     * Setter for the User.
-     *
-     * @param User $user
-     * @return $this
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
     }
 }

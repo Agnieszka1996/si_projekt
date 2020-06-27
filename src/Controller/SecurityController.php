@@ -1,4 +1,7 @@
 <?php
+/**
+ * Security controller.
+ */
 
 namespace App\Controller;
 
@@ -7,16 +10,37 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+/**
+ * Class SecurityController.
+ *
+ * @Route("/")
+ */
 class SecurityController extends AbstractController
 {
     /**
+     * Homepage.
+     *
+     * @Route("/", name="home")
+     */
+    public function homepage(AuthenticationUtils $authenticationUtils): Response
+    {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('task_index');
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+    }
+
+    /**
+     * Login.
+     *
      * @Route("/login", name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //     return $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('task_index');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -27,6 +51,8 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * Logout.
+     *
      * @Route("/logout", name="app_logout")
      */
     public function logout()

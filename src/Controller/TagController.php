@@ -7,9 +7,7 @@ namespace App\Controller;
 
 use App\Entity\Tag;
 use App\Form\TagType;
-use App\Repository\TagRepository;
 use App\Service\TagService;
-use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -46,7 +44,7 @@ class TagController extends AbstractController
     /**
      * Index action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request        HTTP request
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -91,7 +89,7 @@ class TagController extends AbstractController
     /**
      * Create action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request            HTTP request
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -126,8 +124,8 @@ class TagController extends AbstractController
     /**
      * Edit action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request            HTTP request
-     * @param \App\Entity\Tag                           $tag                Tag entity
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
+     * @param \App\Entity\Tag                           $tag     Tag entity
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -165,8 +163,8 @@ class TagController extends AbstractController
     /**
      * Delete action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request       HTTP request
-     * @param \App\Entity\Tag                           $tag           Tag entity
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
+     * @param \App\Entity\Tag                           $tag     Tag entity
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -182,6 +180,12 @@ class TagController extends AbstractController
      */
     public function delete(Request $request, Tag $tag): Response
     {
+        if ($tag->getTasks()->count() or $tag->getNotes()->count()) {
+            $this->addFlash('warning', 'message_tag_is_related_to_resources');
+
+            return $this->redirectToRoute('tag_index');
+        }
+
         $form = $this->createForm(FormType::class, $tag, ['method' => 'DELETE']);
         $form->handleRequest($request);
 
@@ -191,7 +195,7 @@ class TagController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->tagService->delete($tag);
-            $this->addFlash('success', 'message.deleted_successfully');
+            $this->addFlash('success', 'message_deleted_successfully');
 
             return $this->redirectToRoute('tag_index');
         }

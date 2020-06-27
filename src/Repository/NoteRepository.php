@@ -32,7 +32,7 @@ class NoteRepository extends ServiceEntityRepository
      *
      * @constant int
      */
-    const PAGINATOR_ITEMS_PER_PAGE = 5;
+    const PAGINATOR_ITEMS_PER_PAGE = 10;
 
     /**
      * NoteRepository constructor.
@@ -55,18 +55,19 @@ class NoteRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->getOrCreateQueryBuilder()
             ->select(
-                'partial note.{id, name, content}',
+                'partial note.{id, createdAt, name, content}',
                 'partial category.{id, name}',
-                'partial tags.{id, name}'
+                'partial tags.{id, name}',
+                'partial author.{id, email}',
             )
             ->join('note.category', 'category')
+            ->join('note.author', 'author')
             ->leftJoin('note.tags', 'tags')
-            ->orderBy('note.name', 'DESC');
+            ->orderBy('note.createdAt', 'DESC');
         $queryBuilder = $this->applyFiltersToList($queryBuilder, $filters);
 
         return $queryBuilder;
     }
-
 
     /**
      * Get or create new query builder.

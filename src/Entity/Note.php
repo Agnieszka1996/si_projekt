@@ -10,12 +10,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Note.
  *
  * @ORM\Entity(repositoryClass="App\Repository\NoteRepository")
  * @ORM\Table(name="notes")
+ *
+ * @UniqueEntity(fields={"name"})
  */
 class Note
 {
@@ -31,6 +35,19 @@ class Note
     private $id;
 
     /**
+     * Created at.
+     *
+     * @var DateTimeInterface
+     *
+     * @ORM\Column(type="datetime")
+     *
+     * @Assert\Type(type="\DateTimeInterface")
+     *
+     * @Gedmo\Timestampable(on="create")
+     */
+    private $createdAt;
+
+    /**
      * Name.
      *
      * @var string
@@ -39,23 +56,38 @@ class Note
      *     type="string",
      *     length=45,
      * )
+     *
+     * @Assert\Type(type="string")
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *     min="3",
+     *     max="45",
+     * )
      */
     private $name;
 
     /**
      * Content.
      *
-     * @var text
-     *
      * @ORM\Column(type="text")
+     *
+     * @Assert\Type(type="string")
+     * @Assert\NotBlank
      */
     private $content;
 
     /**
      * Category.
      *
-     * @ORM\ManyToOne(targetEntity=Category::class)
+     * @var \App\Entity\Category Category
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity=Category::class,
+     *     inversedBy="notes"
+     * )
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Assert\Type(type="App\Entity\Category")
      */
     private $category;
 
@@ -67,9 +99,14 @@ class Note
      * @ORM\ManyToMany(
      *     targetEntity="App\Entity\Tag",
      *     inversedBy="notes",
-     *     orphanRemoval=true
+     *     orphanRemoval=true,
+     *     fetch="EXTRA_LAZY",
      * )
      * @ORM\JoinTable(name="notes_tags")
+     *
+     * @Assert\All({
+     * @Assert\Type(type="App\Entity\Tag")
+     * })
      */
     private $tags;
 
@@ -80,6 +117,8 @@ class Note
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Assert\Type(type="App\Entity\User")
      */
     private $author;
 
@@ -102,6 +141,26 @@ class Note
     }
 
     /**
+     * Getter for Created At.
+     *
+     * @return \DateTimeInterface|null Created at
+     */
+    public function getCreatedAt(): ?DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Setter for Created at.
+     *
+     * @param \DateTimeInterface $createdAt Created at
+     */
+    public function setCreatedAt(DateTimeInterface $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
      * Getter for Name.
      *
      * @return string|null Name
@@ -112,7 +171,7 @@ class Note
     }
 
     /**
-     * Setter for Name.
+     * Setter for name.
      *
      * @param string $name Name
      */
@@ -122,9 +181,9 @@ class Note
     }
 
     /**
-     * Getter for Content.
+     * Getter for content.
      *
-     * @return text|null Content
+     * @return string|null Content
      */
     public function getContent(): ?string
     {
@@ -132,9 +191,9 @@ class Note
     }
 
     /**
-     * Setter for Content.
+     * Setter for content.
      *
-     * @param text $content Content
+     * @param string $content Content
      */
     public function setContent(string $content): void
     {
@@ -195,15 +254,23 @@ class Note
         }
     }
 
+    /**
+     * Getter for author.
+     *
+     * @return User|null
+     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(?User $author): self
+    /**
+     * Setter for author.
+     *
+     * @return $this
+     */
+    public function setAuthor(?User $author): void
     {
         $this->author = $author;
-
-        return $this;
     }
 }

@@ -9,6 +9,7 @@ use App\Entity\Task;
 use App\Repository\TaskRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -45,19 +46,26 @@ class TaskService
     private $tagService;
 
     /**
+     * Security.
+     */
+    private Security $security;
+
+    /**
      * TaskService constructor.
      *
      * @param \App\Repository\TaskRepository          $taskRepository  Task repository
      * @param \Knp\Component\Pager\PaginatorInterface $paginator       Paginator
      * @param \App\Service\CategoryService            $categoryService Category service
      * @param \App\Service\TagService                 $tagService      Tag service
+     * @param Security                                $security        Security
      */
-    public function __construct(TaskRepository $taskRepository, PaginatorInterface $paginator, CategoryService $categoryService, TagService $tagService)
+    public function __construct(TaskRepository $taskRepository, PaginatorInterface $paginator, CategoryService $categoryService, TagService $tagService, Security $security)
     {
         $this->taskRepository = $taskRepository;
         $this->paginator = $paginator;
         $this->categoryService = $categoryService;
         $this->tagService = $tagService;
+        $this->security = $security;
     }
 
     /**
@@ -72,9 +80,14 @@ class TaskService
     public function createPaginatedList(int $page, UserInterface $user, array $filters = []): PaginationInterface
     {
         $filters = $this->prepareFilters($filters);
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $queryBuilder = $this->taskRepository->queryAll($filters);
+        } else {
+            $queryBuilder = $this->taskRepository->queryByAuthor($user, $filters);
+        }
 
         return $this->paginator->paginate(
-            $this->taskRepository->queryByAuthor($user, $filters),
+            $queryBuilder,
             $page,
             TaskRepository::PAGINATOR_ITEMS_PER_PAGE
         );

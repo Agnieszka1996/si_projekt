@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block body %}
+
     <h1>{{ 'title_task_details'|trans({'%id%': task.id|default('')}) }}</h1>
+
     {% if task is defined and task|length %}
         <dl class="dl-horizontal">
             <dt>{{ 'label_id'|trans }}</dt>
@@ -13,38 +15,43 @@
             <dt>{{ 'label_name'|trans }}</dt>
             <dd>{{ task.name }}</dd>
             <dt>{{ 'label_term'|trans }}</dt>
-            <dd>{{ task.term|date('Y-m-d') }}</dd>
+            <dd>{{ task.term|date('d.m.Y') }}</dd>
             <dt>{{ 'label_description'|trans }}</dt>
             <dd>{{ task.description }}</dd>
             <dt>{{ 'label_category'|trans }}</dt>
             <dd>{{  task.category.name }}</dd>
-            <dt>{{ 'label_tasklist'|trans }}</dt>
-            <dd>{{  task.tasklist.name }}</dd>
             <dt>{{ 'label_tags'|trans }}</dt>
             <dd>{%  for tag in task.tags %}
-                    <div class="btn btn-primary">{{ tag.name }}</div>
+                    <div class="btn btn-info">{{ tag.name }}</div>
                 {% endfor %}
             </dd>
-            <dt>{{ 'label_comments'|trans }}</dt>
+            <br>
+            <dt><h4>{{ 'label_comments'|trans }}</h4></dt>
             <dd>{%  for comment in task.comments %}
-                    {{ comment.date|date('d.m.Y') }}<br>
-                    {{ comment.content }}<br>
+                    <strong>{{ comment.date|date('d.m.Y') }}</strong><br>
+                    {{ comment.content }}
                     <br>
+                    <p>
+                        <a href="{{ url('comment_delete', {'id': comment.id})}}" title="{{ 'action_delete'|trans }}" class="btn btn-info">
+                            {{ 'action_delete'|trans }}
+                        </a>
+                    </p>
                 {% endfor %}
             </dd>
         </dl>
         <div>
-           <h4>{{ 'add_comment'|trans }}</h4>
+            <br>
+            <h5>{{ 'add_comment'|trans }}</h5>
 
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and form is defined %}
         <p>
             {{ form_start(form, { method: 'POST', action: url('task_show', {id: task.id}) }) }}
             {{ form_start(form) }}
-            <input type ="submit" value="{{ 'post'|trans }}" class="btn btn-primary" />
+            <input type ="submit" value="{{ 'post'|trans }}" class="btn btn-info" />
             {{ form_end(form) }}
         </p>
         <p>
-            <a href="{{ url('task_index') }}" title="{{ 'action_back_to_list'|trans }}" class="btn btn-primary">
+            <a href="{{ url('task_index') }}" title="{{ 'action_back_to_list'|trans }}" class="btn btn-info">
                 {{ 'action_back_to_list'|trans }}
             </a>
         </p>

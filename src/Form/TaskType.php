@@ -5,12 +5,11 @@
 
 namespace App\Form;
 
-use App\Entity\Category;
 use App\Entity\Task;
 use App\Form\DataTransformer\TagsDataTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -60,12 +59,20 @@ class TaskType extends AbstractType
             ]
         );
 
-        $builder->add(
-            'term',
-            DateTimeType::class,
-            [
+        $builder
+            ->add('term', DateType::class, [
                 'label' => 'label_term',
-                //'required' => true,
+                'required' => true,
+            ]);
+
+        $builder->add(
+            'alarm',
+            EntityType::class,
+            [
+                'label' => 'label_alarm',
+                'required' => true,
+                'class' => 'App\Entity\Alarm',
+                'choice_label' => 'name',
             ]
         );
 
@@ -74,36 +81,32 @@ class TaskType extends AbstractType
             TextType::class,
             [
                 'label' => 'label_description',
-                //'required' => true,
+                'required' => true,
                 'attr' => ['max_length' => 255],
             ]
         );
 
         $builder->add(
-            'comment',
-            TextType::class,
+            'priority',
+            EntityType::class,
             [
-                'label' => 'label_comment',
-                //'required' => true,
-                'attr' => ['max_length' => 255],
+                'label' => 'label_priority',
+                'required' => true,
+                'class' => 'App\Entity\Priority',
+                'choice_label' => 'name',
             ]
         );
-        
-        $builder->add(
-            'tasklist',
-            EntityType::class,
-            array(
-                'class' => 'App\Entity\Tasklist',
-                'choice_label' => 'name'
-            ));
 
         $builder->add(
             'category',
             EntityType::class,
-            array(
+            [
+                'label' => 'label_category',
+                'required' => true,
                 'class' => 'App\Entity\Category',
-                'choice_label' => 'name'
-            ));
+                'choice_label' => 'name',
+            ]
+        );
 
         $builder->add(
             'tags',

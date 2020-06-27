@@ -7,9 +7,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -67,6 +66,12 @@ class User implements UserInterface
      *     length=180,
      *     unique=true,
      * )
+     *
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email."
+     * )
+     * @Assert\Type("string")
+     * @Assert\NotBlank
      */
     private $email;
 
@@ -83,11 +88,31 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
+     *
+     * @Assert\Type("string")
+     * @Assert\Length(
+     *     min="6",
+     *     max="180",
+     * )
      */
     private $password;
 
     /**
-     * Getter for the Id.
+     * UserData.
+     *
+     * @ORM\OneToOne(
+     *     targetEntity=UserData::class,
+     *     cascade={"persist", "remove"}
+     *     )
+     *
+     * @ORM\JoinColumn(nullable=false)
+     *
+     * @Assert\Type(type="App\Entity\UserData")
+     */
+    private $userData;
+
+    /**
+     * Getter for id.
      *
      * @return int|null Result
      */
@@ -97,7 +122,7 @@ class User implements UserInterface
     }
 
     /**
-     * Getter for the E-mail.
+     * Getter for e-mail.
      *
      * @return string|null E-mail
      */
@@ -107,7 +132,7 @@ class User implements UserInterface
     }
 
     /**
-     * Setter for the E-mail.
+     * Setter for e-mail.
      *
      * @param string $email E-mail
      */
@@ -129,7 +154,7 @@ class User implements UserInterface
     }
 
     /**
-     * Getter for the Roles.
+     * Getter for roles.
      *
      * @see UserInterface
      *
@@ -145,7 +170,7 @@ class User implements UserInterface
     }
 
     /**
-     * Setter for the Roles.
+     * Setter for roles.
      *
      * @param array $roles Roles
      */
@@ -155,7 +180,7 @@ class User implements UserInterface
     }
 
     /**
-     * Getter for the Password.
+     * Getter for password.
      *
      * @see UserInterface
      *
@@ -167,7 +192,7 @@ class User implements UserInterface
     }
 
     /**
-     * Setter for the Password.
+     * Setter for password.
      *
      * @param string $password Password
      */
@@ -193,4 +218,23 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
+    /**
+     * Getter for userData.
+     *
+     * @return UserData|null
+     */
+    public function getUserData(): ?UserData
+    {
+        return $this->userData;
+    }
+
+    /**
+     * Setter for userData.
+     *
+     * @return $this
+     */
+    public function setUserData(UserData $userData): void
+    {
+        $this->userData = $userData;
+    }
 }

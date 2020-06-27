@@ -1,9 +1,11 @@
 <?php
+/**
+ * Comment repository.
+ */
 
 namespace App\Repository;
 
 use App\Entity\Comment;
-use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,6 +17,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CommentRepository extends ServiceEntityRepository
 {
+    /**
+     * CommentRepository constructor.
+     *
+     * @param \Doctrine\Common\Persistence\ManagerRegistry $registry Manager registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Comment::class);
@@ -31,6 +38,20 @@ class CommentRepository extends ServiceEntityRepository
     public function save(Comment $comment): void
     {
         $this->_em->persist($comment);
+        $this->_em->flush($comment);
+    }
+
+    /**
+     * Delete record.
+     *
+     * @param \App\Entity\Comment $comment Comment entity
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function delete(Comment $comment): void
+    {
+        $this->_em->remove($comment);
         $this->_em->flush($comment);
     }
 

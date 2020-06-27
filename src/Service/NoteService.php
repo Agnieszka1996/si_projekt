@@ -9,6 +9,7 @@ use App\Entity\Note;
 use App\Repository\NoteRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -45,19 +46,26 @@ class NoteService
     private $tagService;
 
     /**
+     * Security.
+     */
+    private Security $security;
+
+    /**
      * NoteService constructor.
      *
      * @param \App\Repository\NoteRepository          $noteRepository  Note repository
      * @param \Knp\Component\Pager\PaginatorInterface $paginator       Paginator
      * @param \App\Service\CategoryService            $categoryService Category service
      * @param \App\Service\TagService                 $tagService      Tag service
+     * @param Security                                $security        Security
      */
-    public function __construct(NoteRepository $noteRepository, PaginatorInterface $paginator, CategoryService $categoryService, TagService $tagService)
+    public function __construct(NoteRepository $noteRepository, PaginatorInterface $paginator, CategoryService $categoryService, TagService $tagService, Security $security)
     {
         $this->noteRepository = $noteRepository;
         $this->paginator = $paginator;
         $this->categoryService = $categoryService;
         $this->tagService = $tagService;
+        $this->security = $security;
     }
 
     /**
@@ -72,9 +80,14 @@ class NoteService
     public function createPaginatedList(int $page, UserInterface $user, array $filters = []): PaginationInterface
     {
         $filters = $this->prepareFilters($filters);
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $queryBuilder = $this->noteRepository->queryAll($filters);
+        } else {
+            $queryBuilder = $this->noteRepository->queryByAuthor($user, $filters);
+        }
 
         return $this->paginator->paginate(
-            $this->noteRepository->queryByAuthor($user, $filters),
+            $queryBuilder,
             $page,
             NoteRepository::PAGINATOR_ITEMS_PER_PAGE
         );

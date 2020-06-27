@@ -1,4 +1,7 @@
 <?php
+/**
+ * UserData repository.
+ */
 
 namespace App\Repository;
 
@@ -16,6 +19,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserDataRepository extends ServiceEntityRepository
 {
+    /**
+     * UserDataRepository constructor.
+     *
+     * @param \Doctrine\Common\Persistence\ManagerRegistry $registry Manager registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, UserData::class);
@@ -34,7 +42,6 @@ class UserDataRepository extends ServiceEntityRepository
         $this->_em->persist($userdata);
         $this->_em->flush($userdata);
     }
-
 
     /**
      * Get or create new query builder.
@@ -76,6 +83,19 @@ class UserDataRepository extends ServiceEntityRepository
         return $queryBuilder;
     }
 
+    /**
+     * Delete userData.
+     *
+     * @param \App\Entity\UserData $userdata UserData entity
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function delete(UserData $userdata): void
+    {
+        $this->_em->remove($userdata);
+        $this->_em->flush($userdata);
+    }
 
     // /**
     //  * @return UserData[] Returns an array of UserData objects

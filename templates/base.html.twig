@@ -2,88 +2,74 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}
-                <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">-->
-                <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
-                <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     {% endblock %}
 </head>
 <body>
-
-<header>
-
-    <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
-
-        <a class="navbar-brand" href="#"><img src="{{ asset('hook.png') }}" width="60" height="60" class="d-inline-block mr-1 align-bottom" alt="">My ToDoList</a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="mainmenu">
-
-            <ul class="navbar-nav mr-auto">
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('tasklist_index') }}"> Listy zadań </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('task_index') }}"> Zadania </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('note_index') }}"> Notatki </a>
-                </li>
-
-                {% if is_granted ('ROLE_ADMIN') %}
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('category_index') }}"> Kategorie </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('tag_index') }}"> Tagi </a>
-                </li>
-                {%  endif %}
-
-            </ul>
-
-        </div>
-        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            <div>
-                <p>
-                  Hello,
-                <a href="{{ url('user-data_index') }}">
-                    {{ app.user.email }}</a>
-                </a>
-                </p>
+    <header class="header">
+        <nav class="navbar navbar-dark bg-info navbar-expand-lg">
+            <a class="navbar-brand" href="#"><img src="{{ asset('hook.png') }}" width="60" height="60" class="d-inline-block mr-1 align-bottom" alt="">My ToDoList</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainmenu">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url('category_index') }}"> {{ 'title_category_list'|trans }} </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url('task_index') }}"> {{ 'title_task_list'|trans }} </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url('note_index') }}"> {{ 'title_note_list'|trans }} </a>
+                    </li>
+                        {% if is_granted ('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url('tag_index') }}"> {{ 'title_tag_list'|trans }} </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url('user_index') }}"> {{ 'title_user_list'|trans }} </a>
+                    </li>
+                    {%  endif %}
+                </ul>
             </div>
-            <div>
-                <a href="{{ url('app_logout') }}" class="btn btn-light">
-                    {{ 'action_logout'|trans }}</a>
-                </a>
-            </div>
-        {% else %}
-            <div>
-                <a href="{{ url('app_login') }}" class="btn btn-light">
-                    {{ 'action_login'|trans }}</a>
-                </a>
-            </div>
-        {% endif %}
-    </nav>
-
-</header>
-
-<div class="container-fluid">
-    {% include 'default/_flash_messages.html.twig' %}
-    {% block body %}{% endblock %}
-</div>
-{% block javascripts %}
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-{% endblock %}
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <div>
+                    <a href="{{ url('user_show', {id: app.user.id}) }}" class="user">
+                        {{ app.user.email }}</a>
+                    </a>
+                </div>
+                <div>
+                    <a href="{{ url('app_logout') }}" class="btn btn-light">
+                        {{ 'action_logout'|trans }}</a>
+                    </a>
+                </div>
+            {% else %}
+                <div>
+                    <a href="{{ url('app_register') }}" class="btn btn-light">
+                        {{ 'action_register'|trans }}</a>
+                    </a>
+                </div>
+                <div>
+                    <a href="{{ url('app_login') }}" class="btn btn-light" id="login_btn">
+                        {{ 'action_login'|trans }}</a>
+                    </a>
+                </div>
+            {% endif %}
+        </nav>
+    </header>
+    <div class="container-lg">
+        {% include 'default/_flash_messages.html.twig' %}
+        {% block body %}{% endblock %}
+    </div>
+    {% block javascripts %}
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    {% endblock %}
 </body>
 </html>

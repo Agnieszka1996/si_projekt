@@ -7,8 +7,8 @@ namespace App\Repository;
 
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Class CategoryRepository.
@@ -29,7 +29,7 @@ class CategoryRepository extends ServiceEntityRepository
      *
      * @constant int
      */
-    const PAGINATOR_ITEMS_PER_PAGE = 3;
+    const PAGINATOR_ITEMS_PER_PAGE = 5;
 
     /**
      * CategoryRepository constructor.
@@ -49,6 +49,9 @@ class CategoryRepository extends ServiceEntityRepository
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
+            ->select('category', 'partial tasks.{id}', 'partial notes.{id}')
+            ->leftJoin('category.tasks', 'tasks')
+            ->leftJoin('category.notes', 'notes')
             ->orderBy('category.name', 'DESC');
     }
 

@@ -9,7 +9,6 @@ use App\Entity\Note;
 use App\Form\DataTransformer\TagsDataTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -54,7 +53,7 @@ class NoteType extends AbstractType
             TextType::class,
             [
                 'label' => 'label_name',
-                'required' => false,
+                'required' => true,
                 'attr' => ['max_length' => 45],
             ]
         );
@@ -71,10 +70,13 @@ class NoteType extends AbstractType
         $builder->add(
             'category',
             EntityType::class,
-            array(
+            [
+                'label' => 'label_category',
+                'required' => true,
                 'class' => 'App\Entity\Category',
-                'choice_label' => 'name'
-            ));
+                'choice_label' => 'name',
+            ]
+        );
 
         $builder->add(
             'tags',

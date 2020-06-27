@@ -6,27 +6,33 @@
 
 {% block body %}
     <h1>{{ 'category_details'|trans({'%id%': category.id|default('')}) }}</h1>
-    {% if pagination is defined and pagination.items|length %}
-
-    <div class="navigation text-center">
-        {{ knp_pagination_render(pagination) }}
-    </div>
-
-    {% if pagination is defined and pagination|length %}
-        <dl class="dl-horizontal">
+    {% if category is defined and category|length %}
+         <dl class="dl-horizontal">
             <dt>{{ 'label_id'|trans }}</dt>
             <dd>{{ category.id }}</dd>
             <dt>{{ 'label_name'|trans }}</dt>
             <dd>{{ category.name }}</dd>
-            <dt>{{ 'label_content'|trans }}</dt>
+            <dt>{{ 'label_description'|trans }}</dt>
             <dd>{{ category.description }}</dd>
-
-            {% for task in pagination.items %}
-                <td>{{ task.name }}</td>
-            {%  endfor %}
+            <dt>{{ 'label_tasks'|trans }}</dt>
+            <dd>
+                {% for task in category.tasks %}
+                    <a href="{{ url('task_show', {id: task.id}) }}" title="{{ 'task_show'|trans }}">
+                        {{ task.name }}
+                    </a>|
+                {%  endfor %}
+            </dd>
+            <dt>{{ 'label_notes'|trans }}</dt>
+            <dd>
+                {% for note in category.notes %}
+                    <a href="{{ url('note_show', {id: note.id}) }}" title="{{ 'note_show'|trans }}">
+                        {{ note.name }}
+                    </a>|
+                {%  endfor %}
+            </dd>
         </dl>
         <p>
-            <a href="{{ url('category_index') }}" title="{{ 'action_back_to_list'|trans }}">
+            <a href="{{ url('category_index') }}" title="{{ 'action_back_to_list'|trans }}" class="btn btn-info">
                 {{ 'action_back_to_list'|trans }}
             </a>
         </p>
@@ -34,6 +40,5 @@
         <p>
             {{ 'message_item_not_found'|trans }}
         </p>
-    {% endif %}
-    {% endif %}
+    {%  endif %}
 {% endblock %}

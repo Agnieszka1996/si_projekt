@@ -5,11 +5,9 @@
 
 namespace App\Entity;
 
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -61,7 +59,6 @@ class Category
      * @ORM\Column(
      *     type="string",
      *     length=255,
-     *     nullable=true,
      * )
      *
      * @Assert\Type(type="string")
@@ -72,6 +69,49 @@ class Category
      * )
      */
     private $description;
+
+    /**
+     * Tasks.
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection|\App\Entity\Task[] Tasks
+     *
+     * @ORM\OneToMany(
+     *     targetEntity=Task::class,
+     *     mappedBy="category",
+     *     fetch="EXTRA_LAZY",
+     * )
+     *
+     * @Assert\All({
+     * @Assert\Type(type="App\Entity\Task")
+     * })
+     */
+    private $tasks;
+
+    /**
+     * Notes.
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection|\App\Entity\Note[] Notes
+     *
+     * @ORM\OneToMany(
+     *     targetEntity=Note::class,
+     *     mappedBy="category",
+     *     fetch="EXTRA_LAZY",
+     * )
+     *
+     * @Assert\All({
+     * @Assert\Type(type="App\Entity\Note")
+     * })
+     */
+    private $notes;
+
+    /**
+     * Category constructor.
+     */
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+        $this->notes = new ArrayCollection();
+    }
 
     /**
      * Getter for Id.
@@ -121,5 +161,91 @@ class Category
     public function setDescription(string $description): void
     {
         $this->description = $description;
+    }
+
+    /**
+     * Getter for tasks.
+     *
+     * @return Collection|Task[]
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * Add task.
+     *
+     * @return $this
+     */
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove task.
+     *
+     * @return $this
+     */
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->contains($task)) {
+            $this->tasks->removeElement($task);
+            // set the owning side to null (unless already changed)
+            if ($task->getCategory() === $this) {
+                $task->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Getter for notes.
+     *
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    /**
+     * Add note.
+     *
+     * @return $this
+     */
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove note.
+     *
+     * @return $this
+     */
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->contains($note)) {
+            $this->notes->removeElement($note);
+            // set the owning side to null (unless already changed)
+            if ($note->getCategory() === $this) {
+                $note->setCategory(null);
+            }
+        }
+
+        return $this;
     }
 }

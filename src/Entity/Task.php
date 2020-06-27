@@ -9,13 +9,16 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Task.
  *
  * @ORM\Entity(repositoryClass="App\Repository\TaskRepository")
  * @ORM\Table(name="tasks")
+ *
+ * @UniqueEntity(fields={"name"})
  */
 class Task
 {
@@ -39,6 +42,13 @@ class Task
      *     type="string",
      *     length=45,
      * )
+     *
+     * @Assert\Type(type="string")
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *     min="3",
+     *     max="45",
+     * )
      */
     private $name;
 
@@ -47,10 +57,9 @@ class Task
      *
      * @var DateTimeInterface
      *
-     * @ORM\Column(
-     *     type="datetime",
-     *     nullable=true,
-     * )
+     * @ORM\Column(type="datetime")
+     *
+     * @Assert\Type(type="\DateTimeInterface")
      */
     private $term;
 
@@ -62,38 +71,29 @@ class Task
      * @ORM\Column(
      *     type="string",
      *     length=255,
-     *     nullable=true
+     * )
+     *
+     * @Assert\Type(type="string")
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *     min="3",
+     *     max="255",
      * )
      */
     private $description;
 
     /**
-     * Comment.
-     *
-     * @var string
-     *
-     * @ORM\Column(
-     *     type="string",
-     *     length=255,
-     *     nullable=true,
-     * )
-     */
-    private $comment;
-
-    /**
      * Category.
      *
-     * @ORM\ManyToOne(targetEntity=Category::class)
+     * @ORM\ManyToOne(
+     *     targetEntity=Category::class,
+     *     inversedBy="tasks"
+     * )
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Assert\Type(type="App\Entity\Category")
      */
     private $category;
-
-    /**
-     * Tasklist.
-     *
-     * @ORM\ManyToOne(targetEntity=Tasklist::class)
-     */
-    private $tasklist;
 
     /**
      * Tags.
@@ -103,9 +103,14 @@ class Task
      * @ORM\ManyToMany(
      *     targetEntity="App\Entity\Tag",
      *     inversedBy="tasks",
-     *     orphanRemoval=true
+     *     orphanRemoval=true,
+     *     fetch="EXTRA_LAZY",
      * )
      * @ORM\JoinTable(name="tasks_tags")
+     *
+     * @Assert\All({
+     * @Assert\Type(type="App\Entity\Tag")
+     * })
      */
     private $tags;
 
@@ -116,13 +121,47 @@ class Task
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Assert\Type(type="App\Entity\User")
      */
     private $author;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="task", orphanRemoval=true)
+     * Comments.
+     *
+     * @var array
+     *
+     * @ORM\OneToMany(
+     *     targetEntity=Comment::class,
+     *     mappedBy="task",
+     *     orphanRemoval=true
+     * )
+     *
+     * @Assert\All({
+     * @Assert\Type(type="App\Entity\Comment")
+     * })
      */
     private $comments;
+
+    /**
+     * Alarm.
+     *
+     * @ORM\ManyToOne(targetEntity=Alarm::class)
+     * @ORM\JoinColumn(nullable=false)
+     *
+     * @Assert\Type(type="App\Entity\Alarm")
+     */
+    private $alarm;
+
+    /**
+     * Priority.
+     *
+     * @ORM\ManyToOne(targetEntity=Priority::class)
+     * @ORM\JoinColumn(nullable=false)
+     *
+     * @Assert\Type(type="App\Entity\Priority")
+     */
+    private $priority;
 
     /**
      * Task constructor.
@@ -168,7 +207,7 @@ class Task
      *
      * @return \DateTimeInterface|null Term
      */
-    public function getTerm(): ?\DateTimeInterface
+    public function getTerm(): ?DateTimeInterface
     {
         return $this->term;
     }
@@ -178,7 +217,7 @@ class Task
      *
      * @param \DateTimeInterface $term Term
      */
-    public function setTerm(?\DateTimeInterface $term): void
+    public function setTerm(DateTimeInterface $term): void
     {
         $this->term = $term;
     }
@@ -204,26 +243,6 @@ class Task
     }
 
     /**
-     * Getter for Comment.
-     *
-     * @return string|null Comment
-     */
-    public function getComment(): ?string
-    {
-        return $this->comment;
-    }
-
-    /**
-     * Setter for Comment.
-     *
-     * @param string $comment Comment
-     */
-    public function setComment(string $comment): void
-    {
-        $this->comment = $comment;
-    }
-
-    /**
      * Getter for category.
      *
      * @return \App\Entity\Category|null Category
@@ -241,26 +260,6 @@ class Task
     public function setCategory(?Category $category): void
     {
         $this->category = $category;
-    }
-
-    /**
-     * Getter for tasklist.
-     *
-     * @return \App\Entity\Tasklist|null Tasklist
-     */
-    public function getTasklist(): ?Tasklist
-    {
-        return $this->tasklist;
-    }
-
-    /**
-     * Setter for tasklist.
-     *
-     * @param \App\Entity\Tasklist|null $tasklist Tasklist
-     */
-    public function setTasklist(?Tasklist $tasklist): void
-    {
-        $this->tasklist = $tasklist;
     }
 
     /**
@@ -297,19 +296,29 @@ class Task
         }
     }
 
+    /**
+     * Getter for author.
+     *
+     * @return User|null
+     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(?User $author): self
+    /**
+     * Setter for author.
+     *
+     * @return $this
+     */
+    public function setAuthor(?User $author): void
     {
         $this->author = $author;
-
-        return $this;
     }
 
     /**
+     * Getter for comments.
+     *
      * @return Collection|Comment[]
      */
     public function getComments(): Collection
@@ -317,6 +326,11 @@ class Task
         return $this->comments;
     }
 
+    /**
+     * Add comment.
+     *
+     * @return $this
+     */
     public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
@@ -327,6 +341,11 @@ class Task
         return $this;
     }
 
+    /**
+     * Remove comment.
+     *
+     * @return $this
+     */
     public function removeComment(Comment $comment): self
     {
         if ($this->comments->contains($comment)) {
@@ -338,5 +357,45 @@ class Task
         }
 
         return $this;
+    }
+
+    /**
+     * Getter for alarm.
+     *
+     * @return Alarm|null
+     */
+    public function getAlarm(): ?Alarm
+    {
+        return $this->alarm;
+    }
+
+    /**
+     * Setter for alarm.
+     *
+     * @return $this
+     */
+    public function setAlarm(?Alarm $alarm): void
+    {
+        $this->alarm = $alarm;
+    }
+
+    /**
+     * Getter for priority.
+     *
+     * @return Priority|null
+     */
+    public function getPriority(): ?Priority
+    {
+        return $this->priority;
+    }
+
+    /**
+     * Setter for priority.
+     *
+     * @return $this
+     */
+    public function setPriority(?Priority $priority): void
+    {
+        $this->priority = $priority;
     }
 }

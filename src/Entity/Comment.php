@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\CommentRepository;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Comment.
@@ -34,6 +36,13 @@ class Comment
      *     type="string",
      *     length=255
      * )
+     *
+     * @Assert\Type(type="string")
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *     min="3",
+     *     max="255",
+     * )
      */
     private $content;
 
@@ -42,18 +51,26 @@ class Comment
      *
      * @var DateTimeInterface
      *
-     * @ORM\Column(
-     *     type="datetime"
-     * )
+     * @ORM\Column(type="datetime")
+     *
+     * @Assert\Type(type="\DateTimeInterface")
+     *
+     * @Gedmo\Timestampable(on="create")
      */
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Task::class, inversedBy="comments")
+     * Task.
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity=Task::class,
+     *     inversedBy="comments"
+     * )
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Assert\Type(type="App\Entity\Task")
      */
     private $task;
-
 
     /**
      * Getter for Id.
@@ -75,11 +92,9 @@ class Comment
         return $this->content;
     }
 
-
     /**
      * Setter for Content.
      *
-     * @param string $content
      * @return $this
      */
     public function setContent(string $content): void
@@ -92,7 +107,7 @@ class Comment
      *
      * @return DateTimeInterface|null
      */
-    public function getDate(): ?\DateTimeInterface
+    public function getDate(): ?DateTimeInterface
     {
         return $this->date;
     }
@@ -100,10 +115,9 @@ class Comment
     /**
      * Setter for Date.
      *
-     * @param DateTimeInterface $date
      * @return $this
      */
-    public function setDate(\DateTimeInterface $date): void
+    public function setDate(DateTimeInterface $date): void
     {
         $this->date = $date;
     }
@@ -121,7 +135,6 @@ class Comment
     /**
      * Setter for Task.
      *
-     * @param Task|null $task
      * @return $this
      */
     public function setTask(?Task $task): void
