@@ -6,6 +6,8 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Task;
+use App\Form\CommentType;
 use App\Service\CommentService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,6 +38,47 @@ class CommentController extends AbstractController
     public function __construct(CommentService $commentService)
     {
         $this->commentService = $commentService;
+    }
+
+    /**
+     * Create action.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
+     * @param \App\Entity\Task                          $task    Task entity
+     *
+     * @return \Symfony\Component\HttpFoundation\Response HTTP response
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @Route(
+     *     "/comment-create/{id}",
+     *     methods={"GET", "POST"},
+     *     requirements={"id": "[1-9]\d*"},
+     *     name="comment_create",
+     * )
+     */
+    public function create(Request $request, Task $task): Response
+    {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setTask($task);
+            $this->commentService->save($comment);
+            $this->addFlash('success', 'comment_created_successfully');
+
+            return $this->redirectToRoute('task_show', ['id' => $task->getId()]);
+        }
+
+        return $this->render(
+            'comment/create.html.twig',
+            [
+                'form' => $form->createView(),
+                'task' => $task->getId(),
+            ]
+        );
     }
 
     /**

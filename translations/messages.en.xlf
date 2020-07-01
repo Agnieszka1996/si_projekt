@@ -62,6 +62,10 @@
                 <source>Day</source>
                 <target>Day</target>
             </trans-unit>
+            <trans-unit id="high">
+                <source>high</source>
+                <target>high</target>
+            </trans-unit>
             <trans-unit id="label_actions">
                 <source>label_actions</source>
                 <target>Actions</target>
@@ -158,6 +162,10 @@
                 <source>label_term</source>
                 <target>Term</target>
             </trans-unit>
+            <trans-unit id="low">
+                <source>low</source>
+                <target>low</target>
+            </trans-unit>
             <trans-unit id="message_category_contains_resources">
                 <source>message_category_contains_resources</source>
                 <target>Category contains resources.</target>
@@ -226,6 +234,10 @@
                 <source>new_password_confirm</source>
                 <target>New password confirm</target>
             </trans-unit>
+            <trans-unit id="no">
+                <source>no</source>
+                <target>no</target>
+            </trans-unit>
             <trans-unit id="note_show">
                 <source>note_show</source>
                 <target>Show note</target>
@@ -277,6 +289,10 @@
             <trans-unit id="title_change_password">
                 <source>title_change_password</source>
                 <target>Change password</target>
+            </trans-unit>
+            <trans-unit id="title_comment_create">
+                <source>title_comment_create</source>
+                <target>Comment create</target>
             </trans-unit>
             <trans-unit id="title_comment_delete">
                 <source>title_comment_delete</source>
@@ -381,6 +397,10 @@
             <trans-unit id="Year">
                 <source>Year</source>
                 <target>Year</target>
+            </trans-unit>
+            <trans-unit id="yes">
+                <source>yes</source>
+                <target>yes</target>
             </trans-unit>
         </body>
     </file>

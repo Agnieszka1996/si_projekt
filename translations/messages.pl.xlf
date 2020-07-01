@@ -62,6 +62,10 @@
                 <source>Day</source>
                 <target>Dzień</target>
             </trans-unit>
+            <trans-unit id="high">
+                <source>high</source>
+                <target>wysoki</target>
+            </trans-unit>
             <trans-unit id="label_actions">
                 <source>label_actions</source>
                 <target>Akcje</target>
@@ -158,6 +162,10 @@
                 <source>label_term</source>
                 <target>Termin</target>
             </trans-unit>
+            <trans-unit id="low">
+                <source>low</source>
+                <target>niski</target>
+            </trans-unit>
             <trans-unit id="message_category_contains_resources">
                 <source>message_category_contains_resources</source>
                 <target>Kategoria zawiera zasoby.</target>
@@ -226,6 +234,10 @@
                 <source>new_password_confirm</source>
                 <target>Potwierdź nowe hasło</target>
             </trans-unit>
+            <trans-unit id="no">
+                <source>no</source>
+                <target>nie</target>
+            </trans-unit>
             <trans-unit id="note_show">
                 <source>note_show</source>
                 <target>Podgląd notatki</target>
@@ -261,6 +273,10 @@
             <trans-unit id="title_category_create">
                 <source>title_category_create</source>
                 <target>Utwórz kategorię</target>
+            </trans-unit>
+            <trans-unit id="title_comment_create">
+                <source>title_comment_create</source>
+                <target>Utwórz komentarz</target>
             </trans-unit>
             <trans-unit id="title_category_delete">
                 <source>title_category_delete</source>
@@ -381,6 +397,10 @@
             <trans-unit id="Year">
                 <source>Year</source>
                 <target>Rok</target>
+            </trans-unit>
+            <trans-unit id="yes">
+                <source>yes</source>
+                <target>tak</target>
             </trans-unit>
         </body>
     </file>

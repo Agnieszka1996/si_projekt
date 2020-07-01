@@ -85,13 +85,6 @@ class NoteController extends AbstractController
      */
     public function show(Note $note): Response
     {
-        /*if ($note->getAuthor() !== $this->getUser()) {
-            $this->addFlash('warning', 'message_item_not_found');
-
-            return $this->redirectToRoute('note_index');
-        }
-        */
-
         return $this->render(
             'note/show.html.twig',
             ['note' => $note]
@@ -123,7 +116,6 @@ class NoteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $note->setAuthor($this->getUser());
             $this->noteService->save($note);
-
             $this->addFlash('success', 'message_created_successfully');
 
             return $this->redirectToRoute('note_index');
@@ -159,19 +151,11 @@ class NoteController extends AbstractController
      */
     public function edit(Request $request, Note $note): Response
     {
-        /*if ($note->getAuthor() !== $this->getUser()) {
-            $this->addFlash('warning', 'message_item_not_found');
-
-            return $this->redirectToRoute('note_index');
-        }
-        */
-
         $form = $this->createForm(NoteType::class, $note, ['method' => 'PUT']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->noteService->save($note);
-
             $this->addFlash('success', 'message_updated_successfully');
 
             return $this->redirectToRoute('note_index');
@@ -210,13 +194,6 @@ class NoteController extends AbstractController
      */
     public function delete(Request $request, Note $note): Response
     {
-        /*if ($note->getAuthor() !== $this->getUser()) {
-            $this->addFlash('warning', 'message_item_not_found');
-
-            return $this->redirectToRoute('note_index');
-        }
-        */
-
         $form = $this->createForm(FormType::class, $note, ['method' => 'DELETE']);
         $form->handleRequest($request);
 

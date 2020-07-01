@@ -43,12 +43,11 @@
             <br>
             <h5>{{ 'add_comment'|trans }}</h5>
 
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and form is defined %}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
         <p>
-            {{ form_start(form, { method: 'POST', action: url('task_show', {id: task.id}) }) }}
-            {{ form_start(form) }}
-            <input type ="submit" value="{{ 'post'|trans }}" class="btn btn-info" />
-            {{ form_end(form) }}
+            <a href="{{ url('comment_create', {'id': task.id}) }}" title="{{ 'action_create'|trans }}" class="btn btn-info">
+                {{ 'action_create'|trans }}
+            </a>
         </p>
         <p>
             <a href="{{ url('task_index') }}" title="{{ 'action_back_to_list'|trans }}" class="btn btn-info">

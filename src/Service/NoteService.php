@@ -46,9 +46,11 @@ class NoteService
     private $tagService;
 
     /**
-     * Security.
+     * Security helper.
+     *
+     * @var \Symfony\Component\Security\Core\Security
      */
-    private Security $security;
+    private $security;
 
     /**
      * NoteService constructor.

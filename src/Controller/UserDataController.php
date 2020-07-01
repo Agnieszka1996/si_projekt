@@ -68,7 +68,6 @@ class UserDataController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userDataService->save($userdata);
-
             $this->addFlash('success', 'message_updated_successfully');
 
             return $this->redirectToRoute('task_index');

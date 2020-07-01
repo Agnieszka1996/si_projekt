@@ -73,6 +73,7 @@ class TaskType extends AbstractType
                 'required' => true,
                 'class' => 'App\Entity\Alarm',
                 'choice_label' => 'name',
+                'choice_translation_domain' => 'messages',
             ]
         );
 
@@ -94,6 +95,7 @@ class TaskType extends AbstractType
                 'required' => true,
                 'class' => 'App\Entity\Priority',
                 'choice_label' => 'name',
+                'choice_translation_domain' => 'messages',
             ]
         );
 

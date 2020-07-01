@@ -20,6 +20,8 @@ class SecurityController extends AbstractController
     /**
      * Homepage.
      *
+     * @return \Symfony\Component\HttpFoundation\Response HTTP response
+     *
      * @Route("/", name="home")
      */
     public function homepage(AuthenticationUtils $authenticationUtils): Response
@@ -33,6 +35,8 @@ class SecurityController extends AbstractController
 
     /**
      * Login.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
      * @Route("/login", name="app_login")
      */

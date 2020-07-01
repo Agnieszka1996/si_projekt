@@ -116,8 +116,8 @@ class TaskRepository extends ServiceEntityRepository
                 'partial category.{id, name}',
                 'partial tags.{id, name}',
                 'partial author.{id, email}',
-                'partial alarm.{id}',
-                'partial priority.{id}',
+                'partial alarm.{id, name}',
+                'partial priority.{id, name}',
             )
             ->join('task.category', 'category')
             ->join('task.author', 'author')

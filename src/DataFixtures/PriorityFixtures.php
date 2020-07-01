@@ -22,7 +22,7 @@ class PriorityFixtures extends AbstractBaseFixtures
     {
         $this->createMany(2, 'priorities', function ($i) {
             $priority = new Priority();
-            if ($i = 1) {
+            if (0 == $i) {
                 $priority->setName('low');
             } else {
                 $priority->setName('high');

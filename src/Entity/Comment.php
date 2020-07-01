@@ -1,4 +1,7 @@
 <?php
+/**
+ * Comment entity.
+ */
 
 namespace App\Entity;
 
@@ -74,8 +77,6 @@ class Comment
 
     /**
      * Getter for Id.
-     *
-     * @return int|null
      */
     public function getId(): ?int
     {
@@ -84,8 +85,6 @@ class Comment
 
     /**
      * Getter for Content.
-     *
-     * @return string|null
      */
     public function getContent(): ?string
     {
@@ -104,8 +103,6 @@ class Comment
 
     /**
      * Getter for Date.
-     *
-     * @return DateTimeInterface|null
      */
     public function getDate(): ?DateTimeInterface
     {
@@ -124,8 +121,6 @@ class Comment
 
     /**
      * Getter for Task.
-     *
-     * @return Task|null
      */
     public function getTask(): ?Task
     {

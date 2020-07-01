@@ -56,6 +56,13 @@ class RegistrationController extends AbstractController
      *
      * @Route("/register", name="app_register")
      *
+     * @param \Symfony\Component\HttpFoundation\Request                             $request         HTTP request
+     * @param \Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface $passwordEncoder Password encoder
+     * @param GuardAuthenticatorHandler                                             $guardHandler    Guard Handler
+     * @param LoginFormAuthenticator                                                $authenticator   Authenticator
+     *
+     * @return \Symfony\Component\HttpFoundation\Response HTTP response
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -78,12 +85,6 @@ class RegistrationController extends AbstractController
             $user->setUserData($userdata);
             $this->userService->save($user);
             $this->userDataService->save($userdata);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->persist($userdata);
-            $entityManager->flush();
-
             $this->addFlash('success', 'message_registered_successfully');
             // do anything else you need here, like send an email
 

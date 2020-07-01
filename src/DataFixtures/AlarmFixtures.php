@@ -22,7 +22,7 @@ class AlarmFixtures extends AbstractBaseFixtures
     {
         $this->createMany(2, 'alarms', function ($i) {
             $alarm = new Alarm();
-            if ($i = 1) {
+            if (0 == $i) {
                 $alarm->setName('no');
             } else {
                 $alarm->setName('yes');

@@ -1,4 +1,7 @@
 <?php
+/**
+ * UserData entity.
+ */
 
 namespace App\Entity;
 

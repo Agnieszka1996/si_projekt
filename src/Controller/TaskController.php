@@ -5,11 +5,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Comment;
 use App\Entity\Task;
-use App\Form\CommentType;
 use App\Form\TaskType;
-use App\Service\CommentService;
 use App\Service\TaskService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,22 +30,13 @@ class TaskController extends AbstractController
     private $taskService;
 
     /**
-     * Comment service.
-     *
-     * @var \App\Service\CommentService
-     */
-    private $commentService;
-
-    /**
      * TaskController constructor.
      *
-     * @param \App\Service\TaskService    $taskService    Task service
-     * @param \App\Service\CommentService $commentService Comment service
+     * @param \App\Service\TaskService $taskService Task service
      */
-    public function __construct(TaskService $taskService, CommentService $commentService)
+    public function __construct(TaskService $taskService)
     {
         $this->taskService = $taskService;
-        $this->commentService = $commentService;
     }
 
     /**
@@ -80,8 +68,7 @@ class TaskController extends AbstractController
     /**
      * Show action.
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
-     * @param \App\Entity\Task                          $task    Task entity
+     * @param \App\Entity\Task $task Task entity
      *
      * @return \Symfony\Component\HttpFoundation\Response HTTP response
      *
@@ -99,36 +86,11 @@ class TaskController extends AbstractController
      *     "is_granted('ROLE_ADMIN') or is_granted('VIEW', task)"
      * )
      */
-    public function show(Request $request, Task $task): Response
+    public function show(Task $task): Response
     {
-        /*if ($task->getAuthor() !== $this->getUser()) {
-            $this->addFlash('warning', 'message_item_not_found');
-
-            return $this->redirectToRoute('task_index');
-        }*/
-
-        $comment = new Comment();
-        $form = $this->createForm(CommentType::class, $comment);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $comment->setTask($task);
-
-            $this->commentService->save($comment);
-
-            $this->addFlash('success', 'comment_created_successfully');
-
-            $id = $task->getId();
-
-            return $this->redirectToRoute('task_show', ['id' => $id]);
-        }
-
         return $this->render(
             'task/show.html.twig',
-            [
-                'task' => $task,
-                'form' => $form->createView(),
-            ]
+            ['task' => $task]
         );
     }
 
@@ -157,7 +119,6 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $task->setAuthor($this->getUser());
             $this->taskService->save($task);
-
             $this->addFlash('success', 'message_created_successfully');
 
             return $this->redirectToRoute('task_index');
@@ -193,18 +154,11 @@ class TaskController extends AbstractController
      */
     public function edit(Request $request, Task $task): Response
     {
-        /*if ($task->getAuthor() !== $this->getUser()) {
-            $this->addFlash('warning', 'message_item_not_found');
-
-            return $this->redirectToRoute('task_index');
-        }
-*/
         $form = $this->createForm(TaskType::class, $task, ['method' => 'PUT']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->taskService->save($task);
-
             $this->addFlash('success', 'message_updated_successfully');
 
             return $this->redirectToRoute('task_index');
@@ -243,13 +197,6 @@ class TaskController extends AbstractController
      */
     public function delete(Request $request, Task $task): Response
     {
-        /*if ($task->getAuthor() !== $this->getUser()) {
-            $this->addFlash('warning', 'message_item_not_found');
-
-            return $this->redirectToRoute('task_index');
-        }
-        */
-
         $form = $this->createForm(FormType::class, $task, ['method' => 'DELETE']);
         $form->handleRequest($request);
 
